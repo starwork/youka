@@ -286,7 +286,10 @@
     $(function () {
 
         // 富文本编辑器
-        UM.getEditor('container');
+        UM.getEditor('container', {
+            initialFrameWidth: 375 + 15,
+            initialFrameHeight: 600
+        });
 
         // 选择图片
         $('.upload-file').selectImages({
@@ -347,3 +350,8 @@
 
     });
 </script>
+<style>
+    .edui-container img{
+        max-width: 100%;
+    }
+</style>

@@ -12,8 +12,9 @@
                             <thead>
                             <tr>
                                 <th>用户ID</th>
-                                <th>微信头像</th>
-                                <th>微信昵称</th>
+                                <th>手机号</th>
+                                <th>头像</th>
+                                <th>昵称</th>
                                 <th>性别</th>
                                 <th>国家</th>
                                 <th>省份</th>
@@ -25,6 +26,7 @@
                             <?php if (!$list->isEmpty()): foreach ($list as $item): ?>
                                 <tr>
                                     <td class="am-text-middle"><?= $item['user_id'] ?></td>
+                                    <td class="am-text-middle"><?= $item['phone'] ?></td>
                                     <td class="am-text-middle">
                                         <a href="<?= $item['avatarUrl'] ?>" title="点击查看大图" target="_blank">
                                             <img src="<?= $item['avatarUrl'] ?>" width="72" height="72" alt="">

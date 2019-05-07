@@ -151,9 +151,9 @@
         // ]
         , toolbar: [
             'source | undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
-            'insertorderedlist insertunorderedlist | selectall cleardoc paragraph | fontfamily fontsize',
+            'insertorderedlist insertunorderedlist | selectall paragraph | fontfamily fontsize',
             '| justifyleft justifycenter justifyright justifyjustify ',
-            '| image insertimage',
+            '| image insertimage video',
             '| horizontal'
         ]
 
@@ -228,7 +228,7 @@
 
         //imageScaleEnabled
         // 是否允许点击文件拖拽改变大小,默认true
-        //,imageScaleEnabled:true
+        ,imageScaleEnabled: false
 
         //dropFileEnabled
         // 是否允许拖放图片到编辑区域，上传并插入,默认true
@@ -240,7 +240,7 @@
 
         //autoHeightEnabled
         // 是否自动长高,默认true
-        //,autoHeightEnabled:true
+        ,autoHeightEnabled: false
 
         //autoFloatEnabled
         //是否保持toolbar的位置不动,默认true

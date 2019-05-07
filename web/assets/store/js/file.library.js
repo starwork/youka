@@ -39,11 +39,15 @@
          */
         triggerEvent: function () {
             var _this = this;
-            // 点击开启文件库弹窗
-            _this.$trigger.click(function () {
-                _this.$touch = $(this);
+            if (_this.$trigger !== false) {
+                // 点击开启文件库弹窗
+                _this.$trigger.unbind().click(function () {
+                    _this.$touch = $(this);
+                    _this.showLibraryModal();
+                });
+            } else {
                 _this.showLibraryModal();
-            });
+            }
         },
 
         /**
@@ -458,6 +462,11 @@
     // 在Jquery插件中使用FileLibrary对象
     $.fn.fileLibrary = function (options) {
         new FileLibrary(this, options);
+    };
+
+    // 在Jquery插件中使用FileLibrary对象
+    $.fileLibrary = function (options) {
+        new FileLibrary(false, options);
     };
 
 })(jQuery, window, document);

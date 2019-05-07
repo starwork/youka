@@ -52,7 +52,8 @@ class User extends Controller
        if($model->allowField(true)->save($user_data)){
            $user_id = $model->login([
                'username' => $data['phone'],
-               'password' => $data['password']
+               'password' => $data['password'],
+               'wxapp' => '10001'
            ]);
            $token = $model->getToken();
            return $this->renderSuccess(compact('user_id', 'token'));

@@ -305,7 +305,10 @@
     $(function () {
 
         // 富文本编辑器
-        UM.getEditor('container');
+        UM.getEditor('container', {
+            initialFrameWidth: 375 + 15,
+            initialFrameHeight: 600
+        });
 
         // 选择图片
         $('.upload-file').selectImages({
@@ -339,6 +342,11 @@
             }
         });
 
+        // $(".goods-spec-many").on("click",'table tr .item-delete',function () {
+        //     console.log($(this).parent().parent().attr('data-index'));
+        //     $(this).parent().parent().remove();
+        // })
+
         /**
          * 表单验证提交
          * @type {*}
@@ -366,3 +374,8 @@
 
     });
 </script>
+<style>
+    .edui-container img{
+        max-width: 100%;
+    }
+</style>

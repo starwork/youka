@@ -141,6 +141,7 @@ class Cart
         }
         // 判断商品库存
         $cartGoodsNum = $goods_num + (isset($this->cart[$index]) ? $this->cart[$index]['goods_num'] : 0);
+
         if ($cartGoodsNum > $goods['goods_sku']['stock_num']) {
             $this->setError('很抱歉，商品库存不足');
             return false;

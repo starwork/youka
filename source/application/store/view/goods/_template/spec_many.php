@@ -35,6 +35,7 @@
         <th>划线价</th>
         <th>库存</th>
         <th>重量(kg)</th>
+<!--        <th>操作</th>-->
     </tr>
     {{ each spec_list item }}
     <tr data-index="{{ $index }}" data-sku-id="{{ item.spec_sku_id }}">
@@ -61,6 +62,11 @@
             <input type="number" name="goods_weight" value="{{ item.form.goods_weight }}" class="am-field-valid ipt-w80"
                    required>
         </td>
+<!--        <td>-->
+<!--            <a href="javascript:;" title="删除" class="item-delete tpl-table-black-operation-del" style="color: #e7505a;">-->
+<!--                <i class="am-icon-trash"></i>-->
+<!--            </a>-->
+<!--        </td>-->
     </tr>
     {{ /each }}
     </tbody>
