@@ -3,6 +3,7 @@
 // 应用公共函数库文件
 
 use think\Request;
+use app\common\library\Auth;
 
 /**
  * 打印调试函数
@@ -194,4 +195,26 @@ function randomStr(){
         $str.=$arr[$rand];
     }
     return $str;
+}
+
+function check_auth($name,$uid)
+{
+    if($uid == 1){
+        return true;
+    }
+    $auth = new Auth();
+    if($auth->check($name,$uid)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function check_url($name,$uid,$vars = '', $suffix = true, $domain = false)
+{
+    if(check_auth($name,$uid)){
+        return url($name,$vars, $suffix, $domain);
+    }else{
+        return ' " style="display:none;" ';
+    }
 }

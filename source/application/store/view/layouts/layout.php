@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="<?= $setting['store']['values']['name'] ?>"/>
     <link rel="stylesheet" href="assets/store/css/amazeui.min.css"/>
     <link rel="stylesheet" href="assets/store/css/app.css"/>
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_783249_t6knt0guzo.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_783249_fc0v7ysdt1k.css">
     <script src="assets/store/js/jquery.min.js"></script>
     <script src="//at.alicdn.com/t/font_783249_e5yrsf08rap.js"></script>
     <script>
@@ -56,14 +56,14 @@
     <!-- 侧边导航栏 -->
     <div class="left-sidebar">
         <?php $menus = $menus ?: []; ?>
-        <?php $group = $group ?: 0; ?>
+        <?php $group = $group ?: []; ?>
         <!-- 一级菜单 -->
         <ul class="sidebar-nav">
             <li class="sidebar-nav-heading"><?= $setting['store']['values']['name'] ?></li>
             <?php foreach ($menus as $key => $item): ?>
                 <li class="sidebar-nav-link">
-                    <a href="<?= isset($item['index']) ? url($item['index']) : 'javascript:void(0);' ?>"
-                       class="<?= $item['active'] ? 'active' : '' ?>">
+                    <a href="<?= isset($item['name']) ? url($item['name']) : 'javascript:void(0);' ?>"
+                       class="<?= in_array($item['id'],$group) ? 'active' : '' ?>">
                         <?php if (isset($item['is_svg']) && $item['is_svg'] === true): ?>
                             <svg class="icon sidebar-nav-link-logo" aria-hidden="true">
                                 <use xlink:href="#<?= $item['icon'] ?>"></use>
@@ -72,37 +72,37 @@
                             <i class="iconfont sidebar-nav-link-logo <?= $item['icon'] ?>"
                                style="<?= isset($item['color']) ? "color:{$item['color']};" : '' ?>"></i>
                         <?php endif; ?>
-                        <?= $item['name'] ?>
+                        <?= $item['title'] ?>
                     </a>
                 </li>
             <?php endforeach; ?>
         </ul>
         <!-- 子级菜单-->
-        <?php $second = isset($menus[$group]['submenu']) ? $menus[$group]['submenu'] : []; ?>
+        <?php $second =  isset($group[0]) && isset($menus[$group[0]]['submenu']) ? $menus[$group[0]]['submenu'] : []; ?>
         <?php if (!empty($second)) : ?>
             <ul class="left-sidebar-second">
-                <li class="sidebar-second-title"><?= $menus[$group]['name'] ?></li>
+                <li class="sidebar-second-title"><?= $menus[$group[0]]['title'] ?></li>
                 <li class="sidebar-second-item">
                     <?php foreach ($second as $item) : ?>
                         <?php if (!isset($item['submenu'])): ?>
                             <!-- 二级菜单-->
-                            <a href="<?= url($item['index']) ?>" class="<?= $item['active'] ? 'active' : '' ?>">
-                                <?= $item['name']; ?>
+                            <a href="<?= url($item['name']) ?>" class="<?= in_array($item['id'],$group) ? 'active' : '' ?>">
+                                <?= $item['title']; ?>
                             </a>
                         <?php else: ?>
                             <!-- 三级菜单-->
                             <div class="sidebar-third-item">
                                 <a href="javascript:void(0);"
-                                   class="sidebar-nav-sub-title <?= $item['active'] ? 'active' : '' ?>">
+                                   class="sidebar-nav-sub-title <?= in_array($item['id'],$group) ? 'active' : '' ?>">
                                     <i class="iconfont icon-caret"></i>
-                                    <?= $item['name']; ?>
+                                    <?= $item['title']; ?>
                                 </a>
                                 <ul class="sidebar-third-nav-sub">
                                     <?php foreach ($item['submenu'] as $third) : ?>
                                         <li>
-                                            <a class="<?= $third['active'] ? 'active' : '' ?>"
-                                               href="<?= url($third['index']) ?>">
-                                                <?= $third['name']; ?></a>
+                                            <a class="<?= in_array($third['id'],$group) ? 'active' : '' ?>"
+                                               href="<?= url($third['name']) ?>">
+                                                <?= $third['title']; ?></a>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>

@@ -2,7 +2,9 @@
 
 namespace app\store\controller;
 
+use app\common\library\Auth;
 use think\Config;
+use think\Log;
 use think\Session;
 use think\Cookie;
 use app\store\model\Setting;
@@ -33,12 +35,14 @@ class Controller extends \think\Controller
     protected $allowAllAction = [
         // 登录页面
         'passport/login',
+        'passport/logout',
     ];
 
     /* @var array $notLayoutAction 无需全局layout */
     protected $notLayoutAction = [
         // 登录页面
         'passport/login',
+        'passport/logout',
     ];
 
     /**
@@ -46,6 +50,7 @@ class Controller extends \think\Controller
      */
     public function _initialize()
     {
+
         // 商家登录信息
         $this->store = Session::get('yoshop_store');
         // 当前路由信息
@@ -64,14 +69,21 @@ class Controller extends \think\Controller
         // 验证当前请求是否在白名单
         if (!in_array($this->routeUri, $this->notLayoutAction)) {
             // 输出到view
+            list($menus,$group) = $this->menus();
+            Log::debug($menus);
+            Log::debug($group);
             $this->assign([
                 'base_url' => base_url(),                      // 当前域名
                 'store_url' => url('/store'),              // 后台模块url
-                'group' => $this->group,
-                'menus' => $this->menus(),                     // 后台菜单
+                'uid' => $this->store['user']['store_user_id'],              // 后台用户id
+                'group' => $group,
+                'menus' => $menus,                     // 后台菜单
                 'store' => $this->store,                       // 商家登录信息
                 'setting' => Setting::getAll() ?: null,        // 当前商城设置
             ]);
+            if(!check_auth($this->routeUri,$this->store['user']['store_user_id'])){
+                $this->error('无权限');
+            }
         }
     }
 
@@ -86,7 +98,7 @@ class Controller extends \think\Controller
         $this->action = $this->request->action();
         // 控制器分组 (用于定义所属模块)
         $groupstr = strstr($this->controller, '.', true);
-        $this->group = $groupstr !== false ? $groupstr : $this->controller;
+        //$this->group = $groupstr !== false ? $groupstr : $this->controller;
         // 当前uri
         $this->routeUri = $this->controller . '/' . $this->action;
     }
@@ -97,6 +109,8 @@ class Controller extends \think\Controller
      */
     private function menus()
     {
+        $auth = new Auth();
+        return $auth->getMenus($this->routeUri,$this->store['user']['store_user_id']);;
         foreach ($data = Config::get('menus') as $group => $first) {
             $data[$group]['active'] = $group === $this->group;
             // 遍历：二级菜单

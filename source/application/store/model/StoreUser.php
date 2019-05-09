@@ -3,6 +3,8 @@
 namespace app\store\model;
 
 use app\common\model\StoreUser as StoreUserModel;
+use think\Db;
+use think\Request;
 use think\Session;
 
 /**
@@ -12,6 +14,11 @@ use think\Session;
  */
 class StoreUser extends StoreUserModel
 {
+
+    public function group()
+    {
+        return $this->belongsToMany('StoreGroup','store_group_access','group_id','uid');
+    }
     /**
      * 商家用户登录
      * @param $data
@@ -81,6 +88,95 @@ class StoreUser extends StoreUserModel
             'user_name' => $data['user_name'],
         ]);
         return true;
+    }
+
+    public function getList($filter= [])
+    {
+        $id = $this->getPk();
+        return $this->with('group')
+            ->where($filter)
+            ->order($id,'desc')
+            ->paginate(15, false, [
+                'query' => Request::instance()->request()
+            ]);
+    }
+
+    public function add($data)
+    {
+        $data['wxapp_id'] = '10001';
+        // 开启事务
+        Db::startTrans();
+        try {
+            $data['password'] = yoshop_hash($data['password']);
+            // 添加管理员
+            $this->allowField(true)->save($data);
+            $arr = [];
+            array_map(function ($val) use (&$arr) {
+                $arr[] = [
+                    'uid' => $this['store_user_id'],
+                    'group_id' => $val
+                ];
+            }, $data['group_ids']);
+            $model = new StoreGroupAccess();
+            $model->saveAll($arr);
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
+        return false;
+    }
+
+    public function edit($data)
+    {
+        // 开启事务
+        Db::startTrans();
+        try {
+            if($data['password']){
+                $data['password'] = yoshop_hash($data['password']);
+            }else{
+                unset($data['password']);
+            }
+            // 添加管理员
+            $this->allowField(true)->save($data);
+            $arr = [];
+
+            $model = new StoreGroupAccess();
+            $model->where('uid',$this['store_user_id'])->delete();
+            array_map(function ($val) use (&$arr) {
+                $arr[] = [
+                    'uid' => $this['store_user_id'],
+                    'group_id' => $val
+                ];
+            }, $data['group_ids']);
+            $model->saveAll($arr);
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
+        return false;
+    }
+
+    /**
+     * 删除
+     * @param $category_id
+     * @return bool|int
+     */
+    public function remove($id)
+    {
+        // 开启事务
+        Db::startTrans();
+        try {
+            $model = new StoreGroupAccess();
+            $model->where('uid',$this['store_user_id'])->delete();
+            self::get($id)->delete();
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+        }
+        return false;
     }
 
 }

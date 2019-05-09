@@ -206,7 +206,7 @@
                         <?php if ($detail['delivery_status']['value'] == 10): ?>
                             <!-- 去发货 -->
                             <form id="delivery" class="my-form am-form tpl-form-line-form" method="post"
-                                  action="<?= url('order/delivery', ['order_id' => $detail['order_id']]) ?>">
+                                  action="<?= check_url('order/delivery',$uid, ['order_id' => $detail['order_id']]) ?>">
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">物流公司名称 </label>
                                     <div class="am-u-sm-9 am-u-end">

@@ -1,5 +1,8 @@
 <?php
 namespace app\common\library\storage\engine;
+use OSS\Core\OssException;
+use OSS\OssClient;
+
 /**
  *
  * Created by PhpStorm.
@@ -31,6 +34,7 @@ class Aliyun extends Server
     {
         // 要上传图片的本地路径
         $realPath = $this->file->getRealPath();
+        //exit($realPath);
 
         // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录 https://ram.console.aliyun.com 创建RAM账号。
         $accessKeyId = $this->config['access_key'];
@@ -40,7 +44,7 @@ class Aliyun extends Server
         // 存储空间名称
         $bucket= $this->config['bucket'];
         // 文件名称
-        $object = $realPath;
+        $object = $this->fileName;
         try{
             $ossClient = new OssClient($accessKeyId, $accessKeySecret, $endpoint);
             $ossClient->uploadFile($bucket, $object, $realPath);

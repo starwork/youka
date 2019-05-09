@@ -26,6 +26,15 @@ class User extends BaseModel
     }
 
     /**
+     * 关联银行卡
+     * @return \think\model\relation\HasMany
+     */
+    public function bank_card()
+    {
+        return $this->hasMany('BankCard');
+    }
+
+    /**
      * 关联收货地址表 (默认地址)
      * @return \think\model\relation\BelongsTo
      */
@@ -42,6 +51,26 @@ class User extends BaseModel
     public function getGenderAttr($value)
     {
         return $this->gender[$value];
+    }
+
+    /**
+     * 显示等级
+     * @param $value
+     * @return array
+     */
+    public function getLevelAttr($value)
+    {
+        $level = [
+            0 => '普通会员',
+            10 => '分销商',
+            20 => '经销商',
+            30 => '市级代理',
+        ];
+        $data = [
+            'level' => $value,
+            'level_name' => $level[$value]
+        ];
+        return $data;
     }
 
     /**

@@ -11,7 +11,7 @@
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
                                     <a class="am-btn am-btn-default am-btn-success am-radius"
-                                       href="<?= url('goods.category/add') ?>">
+                                       href="<?= check_url('goods.category/add',$uid) ?>">
                                         <span class="am-icon-plus"></span> 新增
                                     </a>
                                 </div>
@@ -38,12 +38,12 @@
                                     <td class="am-text-middle"><?= $first['create_time'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
-                                            <a href="<?= url('goods.category/edit',
+                                            <a href="<?= check_url('goods.category/edit',$uid,
                                                 ['category_id' => $first['category_id']]) ?>">
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $first['category_id'] ?>">
+                                               data-id="<?= $first['category_id'] ?> <?= check_url('goods.category/delete',$uid) ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>
@@ -57,12 +57,12 @@
                                         <td class="am-text-middle"><?= $two['create_time'] ?></td>
                                         <td class="am-text-middle">
                                             <div class="tpl-table-black-operation">
-                                                <a href="<?= url('goods.category/edit',
+                                                <a href="<?= check_url('goods.category/edit',$uid,
                                                     ['category_id' => $two['category_id']]) ?>">
                                                     <i class="am-icon-pencil"></i> 编辑
                                                 </a>
                                                 <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                                   data-id="<?= $two['category_id'] ?>">
+                                                   data-id="<?= $two['category_id'] ?> <?= check_url('goods.category/delete',$uid) ?>"">
                                                     <i class="am-icon-trash"></i> 删除
                                                 </a>
                                             </div>
@@ -75,12 +75,12 @@
                                             <td class="am-text-middle"><?= $three['create_time'] ?></td>
                                             <td class="am-text-middle">
                                                 <div class="tpl-table-black-operation">
-                                                    <a href="<?= url('goods.category/edit',
+                                                    <a href="<?= check_url('goods.category/edit',$uid,
                                                         ['category_id' => $three['category_id']]) ?>">
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
                                                     <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                                       data-id="<?= $three['category_id'] ?>">
+                                                       data-id="<?= $three['category_id'] ?> <?= check_url('goods.category/delete',$uid) ?>"">
                                                         <i class="am-icon-trash"></i> 删除
                                                     </a>
                                                 </div>

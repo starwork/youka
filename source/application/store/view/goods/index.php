@@ -11,7 +11,7 @@
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
                                     <a class="am-btn am-btn-default am-btn-success am-radius"
-                                       href="<?= url('goods/add') ?>">
+                                       href="<?= check_url('goods/add',$uid) ?>">
                                         <span class="am-icon-plus"></span> 新增
                                     </a>
                                 </div>
@@ -65,12 +65,12 @@
                                     <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
-                                            <a href="<?= url('goods/edit',
+                                            <a href="<?= check_url('goods/edit',$uid,
                                                 ['goods_id' => $item['goods_id']]) ?>">
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['goods_id'] ?>">
+                                               data-id="<?= $item['goods_id'] ?> <?= check_url('goods/delete',$uid) ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>

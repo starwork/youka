@@ -33,4 +33,5 @@ class StoreUser extends BaseModel
         ]);
     }
 
+
 }

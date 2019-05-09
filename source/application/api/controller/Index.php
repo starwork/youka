@@ -4,6 +4,8 @@ namespace app\api\controller;
 
 use app\api\model\WxappPage;
 use app\api\model\Goods as GoodsModel;
+use app\common\library\delivery\Kd100;
+use app\common\library\delivery\KdNiao;
 
 /**
  * 首页控制器
@@ -32,6 +34,8 @@ class Index extends Controller
 
     public function index()
     {
+        $delivery = new KdNiao();
+        return $delivery->Search('9895266621537','YZBK');
         $items = [];
         return $this->renderSuccess(compact('items'));
     }

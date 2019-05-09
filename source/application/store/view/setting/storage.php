@@ -23,7 +23,7 @@
                                     </label>
                                     <label class="am-radio-inline">
                                         <input type="radio" name="storage[default]" value="aliyun" data-am-ucheck
-                                            <?= $values['default'] === 'qiniu' ? 'checked' : '' ?>> 阿里云OSS存储
+                                            <?= $values['default'] === 'aliyun' ? 'checked' : '' ?>> 阿里云OSS存储
                                     </label>
                                 </div>
                             </div>
