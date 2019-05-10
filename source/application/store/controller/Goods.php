@@ -19,11 +19,12 @@ class Goods extends Controller
      * @return mixed
      * @throws \think\exception\DbException
      */
-    public function index()
+    public function index($goods_status = 0,$category_id = 0,$goods_name = '')
     {
         $model = new GoodsModel;
-        $list = $model->getList();
-        return $this->fetch('index', compact('list'));
+        $list = $model->getList($goods_status,$category_id,$goods_name);
+        $catgory = Category::getCacheTree();
+        return $this->fetch('index', compact('list','catgory','goods_status','category_id','goods_name'));
     }
 
     /**

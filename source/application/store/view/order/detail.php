@@ -210,9 +210,16 @@
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">物流公司名称 </label>
                                     <div class="am-u-sm-9 am-u-end">
-                                        <input type="text" class="tpl-form-input" name="order[express_company]"
-                                               required>
-                                        <small>如：顺丰速运、申通快递</small>
+                                        <select name="order[express_id]" required
+                                                data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder:'请选择物流公司'}">
+                                            <option value=""></option>
+                                        <?php foreach ($express_company as $company): ?>
+                                            <option value="<?=$company['id'] ?>"><?=$company['name'] ?></option>
+                                        <?php endforeach; ?>
+                                        </select>
+<!--                                        <input type="text" class="tpl-form-input" name="order[express_company]"-->
+<!--                                               required>-->
+<!--                                        <small>如：顺丰速运、申通快递</small>-->
                                     </div>
                                 </div>
                                 <div class="am-form-group">

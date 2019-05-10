@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\api\model\Order as OrderModel;
 use app\api\model\Wxapp as WxappModel;
 use app\api\model\Cart as CartModel;
+use app\common\library\delivery\KdNiao;
 use app\common\library\wechat\WxPay;
 
 /**

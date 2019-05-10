@@ -6,6 +6,35 @@
                     <div class="widget-title am-cf"><?= $title ?></div>
                 </div>
                 <div class="widget-body am-fr">
+                    <form class="toolbar-form page_toolbar" action="">
+                        <input type="hidden" name="s" value="/store/order/<?=$s ?>">
+                        <div class="am-u-sm-12">
+                            <div class="am fr">
+                                <div class="am-form-group tpl-form-border-form am-fl">
+                                    <input type="text" name="start_time"
+                                           class="am-form-field"
+                                           value="<?=$start_time ?>" placeholder="请选择起始日期"
+                                           data-am-datepicker>
+                                </div>
+                                <div class="am-form-group tpl-form-border-form am-fl">
+                                    <input type="text" name="end_time"
+                                           class="am-form-field"
+                                           value="<?=$end_time ?>" placeholder="请选择截止日期"
+                                           data-am-datepicker>
+                                </div>
+                                <div class="am-form-group am-fl">
+                                    <div class="am-input-group am-input-group-sm tpl-form-border-form">
+                                        <input type="text" class="am-form-field" name="search"
+                                               placeholder="请输入订单号" value="<?=$search ?>">
+                                        <div class="am-input-group-btn">
+                                            <button class="am-btn am-btn-default am-icon-search"
+                                                    type="submit"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                     <div class="order-list am-scrollable-horizontal am-u-sm-12 am-margin-top-xs">
                         <table width="100%" class="am-table am-table-centered
                         am-text-nowrap am-margin-bottom-xs">

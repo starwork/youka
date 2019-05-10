@@ -8,8 +8,9 @@
 
 namespace app\api\model;
 
+use app\common\model\Comment as CommentModel;
 
-class Comment
+class Comment extends CommentModel
 {
 
 }

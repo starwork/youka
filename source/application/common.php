@@ -48,6 +48,7 @@ function base_url()
 {
     $request = Request::instance();
     $subDir = str_replace('\\', '/', dirname($request->server('PHP_SELF')));
+    return $request->scheme() . '://' .$request->host().'/';
     return $request->scheme() . '://' . $request->host() . $subDir . ($subDir === '/' ? '' : '/');
 }
 

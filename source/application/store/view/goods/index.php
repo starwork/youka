@@ -6,18 +6,67 @@
                     <div class="widget-title am-cf">出售中的商品</div>
                 </div>
                 <div class="widget-body am-fr">
-                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
-                        <div class="am-form-group">
-                            <div class="am-btn-toolbar">
-                                <div class="am-btn-group am-btn-group-xs">
-                                    <a class="am-btn am-btn-default am-btn-success am-radius"
-                                       href="<?= check_url('goods/add',$uid) ?>">
-                                        <span class="am-icon-plus"></span> 新增
-                                    </a>
+                    <form class="toolbar-form page_toolbar" action="">
+                        <input type="hidden" name="s" value="/store/goods/index">
+                        <div class="am-u-sm-12 am-u-md-3">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a class="am-btn am-btn-default am-btn-success am-radius"
+                                           href="<?= check_url('goods/add',$uid) ?>">
+                                            <span class="am-icon-plus"></span> 新增
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="am-u-sm-12 am-u-md-9">
+                            <div class="am fr">
+                                <div class="am-form-group am-fl">
+                                    <select name="category_id" data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder: '商品分类', maxHeight: 400}">
+                                        <option value=""></option>
+                                        <option value="0">全部</option>
+                                        <?php if (isset($catgory)): foreach ($catgory as $first): ?>
+                                            <option value="<?= $first['category_id'] ?>" <?= $category_id == $first['category_id'] ?  'selected' : ''?> ><?= $first['name'] ?></option>
+                                            <?php if (isset($first['child'])): foreach ($first['child'] as $two): ?>
+                                                <option value="<?= $two['category_id'] ?>" <?= $category_id == $two['category_id'] ?  'selected' : ''?> >
+                                                    　　<?= $two['name'] ?></option>
+                                                <?php if (isset($two['child'])): foreach ($two['child'] as $three): ?>
+                                                    <option value="<?= $three['category_id'] ?>" <?= $category_id == $three['category_id'] ?  'selected' : ''?> >
+                                                        　　　<?= $three['name'] ?></option>
+                                                <?php endforeach; endif; ?>
+                                            <?php endforeach; endif; ?>
+                                        <?php endforeach; endif; ?>
+                                    </select>
+                                </div>
+
+                                <div class="am-form-group am-fl">
+                                    <select name="goods_status"
+                                            data-am-selected="{btnSize: 'sm', placeholder: '商品状态'}">
+                                        <option value=""></option>
+                                        <option value="10" <?= $goods_status == 10 ?  'selected' : ''?>
+                                        >上架
+                                        </option>
+                                        <option value="20" <?= $goods_status == 20 ?  'selected' : ''?>
+                                        >下架
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="am-form-group am-fl">
+                                    <div class="am-input-group am-input-group-sm tpl-form-border-form">
+                                        <input type="text" class="am-form-field" name="goods_name"
+                                               placeholder="请输入商品名称"
+                                               value="<?=$goods_name  ?>">
+                                        <div class="am-input-group-btn">
+                                            <button class="am-btn am-btn-default am-icon-search"
+                                                    type="submit"></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
                     <div class="am-scrollable-horizontal am-u-sm-12">
                         <table width="100%" class="am-table am-table-compact am-table-striped
                          tpl-table-black am-text-nowrap">

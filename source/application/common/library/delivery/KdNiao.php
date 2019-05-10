@@ -12,6 +12,19 @@ class KdNiao
     protected $EBusinessID = '1470750';
     protected $AppKey = '9529a733-fd22-435b-9e09-bcf4f0aed184';
     protected $ReqURL = 'http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx';
+
+    /**
+     * 构造方法
+     * Driver constructor.
+     * @param $config
+     * @throws Exception
+     */
+    public function __construct($config)
+    {
+        $this->EBusinessID = $config['express']['id'];
+        $this->AppKey = $config['express']['keyid'];
+    }
+
     function Search($delivery_no,$com){
         $requestData= "{'OrderCode':'','ShipperCode':'".$com."','LogisticCode':'".$delivery_no."'}";
 

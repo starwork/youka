@@ -12,4 +12,15 @@ namespace app\common\model;
 class BankCard extends BaseModel
 {
     protected $name = 'bank_card';
+
+    public function getList($uid = 0)
+    {
+        $filder = [];
+        // 筛选条件
+        $filter = [];
+        $uid > 0 && $filter['user_id'] = $uid;
+
+        $list = $this->where($filder)->order('id')->select();
+        return $list;
+    }
 }

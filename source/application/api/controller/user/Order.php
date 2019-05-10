@@ -6,6 +6,9 @@ use app\api\controller\Controller;
 use app\api\model\Order as OrderModel;
 use app\api\model\Wxapp as WxappModel;
 use app\common\library\wechat\WxPay;
+use app\api\model\Setting as SettingModel;
+use app\common\library\delivery\KdNiao;
+use app\common\model\Express;
 
 /**
  * 用户订单管理
@@ -109,6 +112,43 @@ class Order extends Controller
         $WxPay = new WxPay($wxConfig);
         $wxParams = $WxPay->unifiedorder($order['order_no'], $this->user['open_id'], $order['pay_price']);
         return $this->renderSuccess($wxParams);
+    }
+
+
+    /**
+     * 订单物流查询
+     * @param $order_no
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function express($order_no)
+    {
+        $order = OrderModel::with('address')->where('order_no',$order_no)->where('user_id',$this->user['user_id'])->find();
+        if($order){
+            $config = SettingModel::getItem('store', $this->wxapp_id);
+            $delivery = new KdNiao($config);
+            $company = Express::find($order['express_id']);
+            $result = $delivery->Search($order['express_no'],$company['code']);
+            if($result['Success']){
+                $list = $result['Traces'];
+                if($order['delivery_time']){
+                    $data = [
+                        'AcceptStation' => '已发货',
+                        'AcceptTime' => date('Y-m-d H:i:s',$order['delivery_time'])
+                    ];
+                    array_unshift($list,$data);
+                }
+                if($order['receipt_time']){
+                    $data = [
+                        'AcceptStation' => '[收货地址]'.$order['address']['region'].' '.$order['address']['detail'],
+                        'AcceptTime' => date('Y-m-d H:i:s',$order['receipt_time'])
+                    ];
+                    array_push($list,$data);
+                }
+            }
+            return $list;
+        }
     }
 
 }

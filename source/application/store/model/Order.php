@@ -2,6 +2,7 @@
 
 namespace app\store\model;
 
+use app\common\model\Express;
 use app\common\model\Order as OrderModel;
 use think\Request;
 
@@ -39,8 +40,14 @@ class Order extends OrderModel
             $this->error = '该订单不合法';
             return false;
         }
+        $company = Express::find($data['express_id']);
+        if(!$company){
+            $this->error = '选择物流公司';
+            return false;
+        }
         return $this->save([
-            'express_company' => $data['express_company'],
+            'express_company' => $company['name'],
+            'express_id' => $company['id'],
             'express_no' => $data['express_no'],
             'delivery_status' => 20,
             'delivery_time' => time(),

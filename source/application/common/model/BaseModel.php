@@ -80,11 +80,11 @@ class BaseModel extends Model
      * 定义全局的查询范围
      * @param \think\db\Query $query
      */
-    protected function base($query)
-    {
-        if (self::$wxapp_id > 0) {
-            $query->where($query->getTable() . '.wxapp_id', self::$wxapp_id);
-        }
-    }
+//    protected function base($query)
+//    {
+//        if (self::$wxapp_id > 0) {
+//            $query->where($query->getTable() . '.wxapp_id', self::$wxapp_id);
+//        }
+//    }
 
 }

@@ -17,29 +17,51 @@
                                            value="<?= isset($values['name']) ? $values['name'] : '' ?>" required>
                                 </div>
                             </div>
+<!--                            <div class="am-form-group">-->
+<!--                                <label class="am-u-sm-3 am-form-label">-->
+<!--                                    是否显示首页公告-->
+<!--                                </label>-->
+<!--                                <div class="am-u-sm-9">-->
+<!--                                    <label class="am-radio-inline">-->
+<!--                                        <input type="radio" name="store[is_notice]" value="1"-->
+<!--                                               data-am-ucheck disabled> 开启-->
+<!--                                    </label>-->
+<!--                                    <label class="am-radio-inline">-->
+<!--                                        <input type="radio" name="store[is_notice]" value="0"-->
+<!--                                               data-am-ucheck checked disabled> 关闭-->
+<!--                                    </label>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!---->
+<!--                            <div class="am-form-group">-->
+<!--                                <label class="am-u-sm-3 am-form-label">-->
+<!--                                    首页公告内容-->
+<!--                                </label>-->
+<!--                                <div class="am-u-sm-9">-->
+<!--                                    <input type="text" class="tpl-form-input" name="store[notice]" disabled-->
+<!--                                           value="">-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div class="widget-head am-cf">
+                                <div class="widget-title am-fl">物流查询API</div>
+                            </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label">
-                                    是否显示首页公告
+                                <label class="am-u-sm-3 am-form-label form-require">
+                                    快递鸟商户ID
                                 </label>
                                 <div class="am-u-sm-9">
-                                    <label class="am-radio-inline">
-                                        <input type="radio" name="store[is_notice]" value="1"
-                                               data-am-ucheck disabled> 开启
-                                    </label>
-                                    <label class="am-radio-inline">
-                                        <input type="radio" name="store[is_notice]" value="0"
-                                               data-am-ucheck checked disabled> 关闭
-                                    </label>
+                                    <input type="text" class="tpl-form-input" name="store[express][id]"
+                                           value="<?= isset($values['express']['id']) ? $values['express']['id'] : '' ?>">
+                                    <small>用于查询物流信息，<a href="https://www.kdniao.com/" target="_blank">快递鸟注册</a></small>
                                 </div>
                             </div>
-
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label">
-                                    首页公告内容
+                                <label class="am-u-sm-3 am-form-label form-require">
+                                    快递鸟Key
                                 </label>
                                 <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input" name="store[notice]" disabled
-                                           value="">
+                                    <input type="text" class="tpl-form-input" name="store[express][keyid]"
+                                           value="<?= isset($values['express']['keyid']) ? $values['express']['keyid'] : '' ?>">
                                 </div>
                             </div>
                             <div class="am-form-group">

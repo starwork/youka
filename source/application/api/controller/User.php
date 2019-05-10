@@ -47,13 +47,14 @@ class User extends Controller
 //        }
         $user_data = [
             'phone' => $data['phone'],
-            'password' => yoshop_hash($data['password'])
+            'password' => yoshop_hash($data['password']),
+            'wxapp_id' => '10001'
         ];
        if($model->allowField(true)->save($user_data)){
+           //$sms_data->delete();
            $user_id = $model->login([
                'username' => $data['phone'],
-               'password' => $data['password'],
-               'wxapp' => '10001'
+               'password' => $data['password']
            ]);
            $token = $model->getToken();
            return $this->renderSuccess(compact('user_id', 'token'));

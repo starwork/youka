@@ -161,4 +161,13 @@ class User extends UserModel
         }
     }
 
+
+    /**
+     * 我的邀请
+     */
+    public function getChild($filter)
+    {
+        $list = $this->where('parent',$this['user_id'])->where($filter)->paginate(15);
+        return $list;
+    }
 }
