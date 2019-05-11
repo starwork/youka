@@ -92,13 +92,20 @@ class Order extends Controller
     private function getList($title, $filter = [],$start_time = '',$end_time = '',$search = '')
     {
         $model = new OrderModel;
-        if($start_time != ''){
-            $start_time = strtotime($start_time);
-            $filter['create_time'][] = ['>=',$start_time];
-        }
-        if($end_time != ''){
-            $end_time = strtotime($end_time);
-            $filter['create_time'][] = ['<=',$end_time];
+        if($start_time != '' && $end_time != ''){
+            $start_time1 = strtotime($start_time);
+            $filter['create_time'][] = ['>=',$start_time1];
+            $end_time1 = strtotime($end_time);
+            $filter['create_time'][] = ['<=',$end_time1];
+        }else{
+            if($start_time != ''){
+                $start_time1 = strtotime($start_time);
+                $filter['create_time'] = ['>=',$start_time1];
+            }
+            if($end_time != ''){
+                $end_time1 = strtotime($end_time);
+                $filter['create_time'] = ['<=',$end_time1];
+            }
         }
 
         if($search != ''){

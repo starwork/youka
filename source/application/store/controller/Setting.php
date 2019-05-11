@@ -89,6 +89,26 @@ class Setting extends Controller
     }
 
     /**
+     * 支付设置
+     * @return array|mixed
+     * @throws \think\exception\DbException
+     */
+    public function payment()
+    {
+        return $this->updateEvent('payment');
+    }
+
+    /**
+     * 微信设置
+     * @return array|mixed
+     * @throws \think\exception\DbException
+     */
+    public function wechat()
+    {
+        return $this->updateEvent('wechat');
+    }
+
+    /**
      * 更新商城设置事件
      * @param $key
      * @return array|mixed

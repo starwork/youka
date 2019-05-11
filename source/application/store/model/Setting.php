@@ -21,6 +21,9 @@ class Setting extends SettingModel
         'storage' => '上传设置',
         'store' => '商城设置',
         'trade' => '交易设置',
+        'payment' => '支付设置',
+        'wechat' => '公众号设置',
+        'retail' => '分销设置',
     ];
 
     /**

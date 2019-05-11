@@ -24,7 +24,10 @@ class User extends Controller
     public function login()
     {
         $model = new UserModel();
-        $user_id = $model->login($this->request->post());
+        if(!$user_id = $model->login($this->request->post())){
+            $error = $model->getError() ? $model->getError() : '登录失败';
+            return $this->renderError($error);
+        }
         $token = $model->getToken();
         return $this->renderSuccess(compact('user_id', 'token'));
     }

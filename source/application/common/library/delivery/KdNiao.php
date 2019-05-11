@@ -25,6 +25,12 @@ class KdNiao
         $this->AppKey = $config['express']['keyid'];
     }
 
+    /**
+     * 物流查询
+     * @param $delivery_no
+     * @param $com
+     * @return mixed
+     */
     function Search($delivery_no,$com){
         $requestData= "{'OrderCode':'','ShipperCode':'".$com."','LogisticCode':'".$delivery_no."'}";
 
@@ -39,6 +45,31 @@ class KdNiao
 
         //根据公司业务处理返回的信息......
         return json_decode($result,true);
+    }
+
+    function orderTracesSubByJson($order_no,$delivery_no,$com)
+    {
+        $requestData="{'OrderCode': ".$order_no.",".
+            "'ShipperCode':".$com.",".
+            "'LogisticCode':".$delivery_no.",".
+            "'PayType':1,".
+            "'ExpType':1,".
+            "'IsNotice':0,".
+            "'Cost':1.0,".
+            "'OtherCost':1.0,".
+            "'Sender':".
+            "{".
+            "'Company':'LV','Name':'Taylor','Mobile':'15018442396','ProvinceName':'上海','CityName':'上海','ExpAreaName':'青浦区','Address':'明珠路73号'},".
+            "'Receiver':".
+            "{".
+            "'Company':'GCCUI','Name':'Yann','Mobile':'15018442396','ProvinceName':'北京','CityName':'北京','ExpAreaName':'朝阳区','Address':'三里屯街道雅秀大厦'},".
+            "'Commodity':".
+            "[{".
+            "'GoodsName':'鞋子','Goodsquantity':1,'GoodsWeight':1.0}],".
+            "'Weight':1.0,".
+            "'Quantity':1,".
+            "'Volume':0.0,".
+            "'Remark':'小心轻放'}";
     }
 
     /**

@@ -115,6 +115,7 @@ class Order extends Controller
     }
 
 
+
     /**
      * 订单物流查询
      * @param $order_no
@@ -122,9 +123,9 @@ class Order extends Controller
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function express($order_no)
+    public function express($order_id)
     {
-        $order = OrderModel::with('address')->where('order_no',$order_no)->where('user_id',$this->user['user_id'])->find();
+        $order = OrderModel::with('address')->where('order_id',$order_id)->where('user_id',$this->user['user_id'])->find();
         if($order){
             $config = SettingModel::getItem('store', $this->wxapp_id);
             $delivery = new KdNiao($config);
@@ -147,7 +148,7 @@ class Order extends Controller
                     array_push($list,$data);
                 }
             }
-            return $list;
+            return $this->renderSuccess($list);
         }
     }
 

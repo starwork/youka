@@ -195,6 +195,12 @@ class Order extends OrderModel
                 $filter['delivery_status'] = 20;
                 $filter['receipt_status'] = 10;
                 break;
+            case 'comment';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 20;
+                $filter['receipt_status'] = 20;
+                $filter['comment_status'] = 20;
+                break;
         }
         return $this->with(['goods.image'])
             ->where('user_id', '=', $user_id)

@@ -29,8 +29,7 @@
                                             data-am-selected="{searchBox: 1, btnSize: 'sm'}">
                                         <option value="0">顶级节点</option>
                                         <?php if (isset($list)): foreach ($list as $first): ?>
-                                            <option value="<?= $first['id'] ?>">
-                                                <?= $first['prefix'].$first['title'] ?></option>
+                                            <option value="<?= $first['id'] ?>"><?= $first['prefix'].$first['title'] ?></option>
                                         <?php endforeach; endif; ?>
                                     </select>
                                 </div>

@@ -34,6 +34,15 @@ class Comment extends BaseModel
     }
 
     /**
+     * 关联订单
+     * @return \think\model\relation\BelongsTo
+     */
+    public function order()
+    {
+        return $this->belongsTo('Order');
+    }
+
+    /**
      * 计费方式
      * @param $value
      * @return mixed

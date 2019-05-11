@@ -25,6 +25,7 @@ return [
         // 标签库标签结束标记
         'taglib_end'   => '}}',
     ],
+    'dispatch_error_tmpl'    => APP_PATH . 'store/view/error.php',
     'auth' => [
         'auth_on'           => 1, // 权限开关
         'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。
