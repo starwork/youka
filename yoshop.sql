@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2019-05-10 17:45:22
+Date: 2019-05-11 17:31:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -60,18 +60,35 @@ INSERT INTO `yoshop_category` VALUES ('10002', '男士袜子', '10001', '0', '10
 INSERT INTO `yoshop_category` VALUES ('10003', '女士袜子', '10001', '0', '100', '10001', '1557023907', '1557023907');
 
 -- ----------------------------
+-- Table structure for `yoshop_collect`
+-- ----------------------------
+DROP TABLE IF EXISTS `yoshop_collect`;
+CREATE TABLE `yoshop_collect` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL,
+  `create_time` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of yoshop_collect
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `yoshop_comment`
 -- ----------------------------
 DROP TABLE IF EXISTS `yoshop_comment`;
 CREATE TABLE `yoshop_comment` (
-  `comment_id` int(10) NOT NULL AUTO_INCREMENT,
-  `goods_id` int(10) NOT NULL,
-  `user_id` int(10) NOT NULL,
-  `parent_id` int(10) NOT NULL,
+  `comment_id` int(10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `goods_id` int(10) NOT NULL COMMENT '商品ID',
+  `user_id` int(10) NOT NULL COMMENT '用户ID',
+  `order_id` int(10) NOT NULL COMMENT '订单ID',
+  `parent_id` int(10) NOT NULL COMMENT '上级ID',
   `content` text NOT NULL,
-  `status` smallint(8) NOT NULL,
-  `sort` smallint(80) NOT NULL DEFAULT '100',
-  `is_delete` tinyint(1) NOT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '10' COMMENT '状态 10 显示 20不显示',
+  `sort` smallint(80) NOT NULL DEFAULT '100' COMMENT '排序',
+  `is_delete` tinyint(1) NOT NULL COMMENT '是否删除',
   `wxapp_id` int(10) NOT NULL,
   `create_time` int(10) NOT NULL,
   `update_time` int(10) NOT NULL,
@@ -81,7 +98,7 @@ CREATE TABLE `yoshop_comment` (
 -- ----------------------------
 -- Records of yoshop_comment
 -- ----------------------------
-INSERT INTO `yoshop_comment` VALUES ('1', '10001', '3', '0', '卡活动卡奥斯卡的哈卡', '10', '100', '0', '10001', '0', '0');
+INSERT INTO `yoshop_comment` VALUES ('1', '10001', '3', '0', '0', '卡活动卡奥斯卡的哈卡', '10', '100', '0', '10001', '0', '0');
 
 -- ----------------------------
 -- Table structure for `yoshop_delivery`
@@ -323,6 +340,26 @@ CREATE TABLE `yoshop_menus` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for `yoshop_message`
+-- ----------------------------
+DROP TABLE IF EXISTS `yoshop_message`;
+CREATE TABLE `yoshop_message` (
+  `id` int(10) NOT NULL,
+  `type` varchar(255) NOT NULL COMMENT '类型 delivery 物流  system系统 notice 通知',
+  `user_id` int(10) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `content` varchar(500) NOT NULL,
+  `status` tinyint(3) NOT NULL DEFAULT '10' COMMENT '++++++',
+  `create_time` int(10) NOT NULL,
+  `update_time` int(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of yoshop_message
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `yoshop_order`
 -- ----------------------------
 DROP TABLE IF EXISTS `yoshop_order`;
@@ -331,22 +368,23 @@ CREATE TABLE `yoshop_order` (
   `order_no` varchar(20) NOT NULL DEFAULT '',
   `total_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
   `pay_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
-  `pay_status` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `pay_time` int(11) unsigned NOT NULL DEFAULT '0',
-  `express_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00',
-  `express_company` varchar(50) NOT NULL DEFAULT '',
-  `express_no` varchar(50) NOT NULL DEFAULT '',
+  `pay_status` tinyint(3) unsigned NOT NULL DEFAULT '10' COMMENT '支付状态 10 待支付 20已支付',
+  `pay_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `express_price` decimal(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '运费',
+  `express_company` varchar(50) NOT NULL DEFAULT '' COMMENT '快递公司',
+  `express_no` varchar(50) NOT NULL DEFAULT '' COMMENT '快递单号',
   `express_time` int(10) NOT NULL,
   `express_id` int(10) NOT NULL,
-  `delivery_status` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `delivery_time` int(11) unsigned NOT NULL DEFAULT '0',
-  `receipt_status` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `receipt_time` int(11) unsigned NOT NULL DEFAULT '0',
-  `order_status` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `delivery_status` tinyint(3) unsigned NOT NULL DEFAULT '10' COMMENT '发货状态 10 待发货 20 已发货',
+  `delivery_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '发货时间',
+  `receipt_status` tinyint(3) unsigned NOT NULL DEFAULT '10' COMMENT '收货状态 10 待收货 20 已收货',
+  `receipt_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '收货时间',
+  `order_status` tinyint(3) unsigned NOT NULL DEFAULT '10' COMMENT '订单状态 10 进行中 20取消 30已完成',
+  `comment_status` tinyint(3) NOT NULL DEFAULT '10' COMMENT '评论状态 10 待评论 20已评论',
   `transaction_id` varchar(30) NOT NULL DEFAULT '',
-  `user_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
   `wxapp_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `remark` varchar(500) NOT NULL,
+  `remark` varchar(500) NOT NULL COMMENT '订单备注',
   `create_time` int(11) unsigned NOT NULL DEFAULT '0',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`order_id`),
@@ -356,8 +394,8 @@ CREATE TABLE `yoshop_order` (
 -- ----------------------------
 -- Records of yoshop_order
 -- ----------------------------
-INSERT INTO `yoshop_order` VALUES ('1', '2019050855535498', '120.00', '120.00', '10', '0', '0.00', '', '', '0', '0', '10', '0', '10', '0', '10', '', '3', '10001', '', '1557280455', '1557280455');
-INSERT INTO `yoshop_order` VALUES ('2', '2019050899545055', '0.01', '0.01', '20', '1557282600', '0.00', '圆通速递', '805320094322377053', '0', '10005', '20', '1557460230', '10', '0', '10', '', '3', '10001', '', '1557282444', '1557460230');
+INSERT INTO `yoshop_order` VALUES ('1', '2019050855535498', '120.00', '120.00', '10', '0', '0.00', '', '', '0', '0', '10', '0', '10', '0', '10', '10', '', '3', '10001', '', '1557280455', '1557280455');
+INSERT INTO `yoshop_order` VALUES ('2', '2019050899545055', '0.01', '0.01', '20', '1557282600', '0.00', '圆通速递', '805320094322377053', '0', '10005', '20', '1557460230', '10', '0', '10', '10', '', '3', '10001', '', '1557282444', '1557460230');
 
 -- ----------------------------
 -- Table structure for `yoshop_order_address`
@@ -4228,11 +4266,13 @@ CREATE TABLE `yoshop_setting` (
 -- ----------------------------
 -- Records of yoshop_setting
 -- ----------------------------
-INSERT INTO `yoshop_setting` VALUES ('retail', '分销设置', '', '0', '0');
+INSERT INTO `yoshop_setting` VALUES ('payment', '支付设置', '{\"default\":\"wechat\",\"engine\":{\"wechat\":{\"mchid\":\"\",\"apikey\":\"\"}}}', '10001', '1557560984');
+INSERT INTO `yoshop_setting` VALUES ('retail', '分销设置', '', '10001', '0');
 INSERT INTO `yoshop_setting` VALUES ('sms', '短信设置', '{\"default\":\"aliyun\",\"engine\":{\"aliyun\":{\"AccessKeyId\":\"\",\"AccessKeySecret\":\"\",\"sign\":\"\",\"order_pay\":{\"is_enable\":\"0\",\"template_code\":\"\",\"accept_phone\":\"\"}}}}', '10001', '1530265122');
-INSERT INTO `yoshop_setting` VALUES ('storage', '上传设置', '{\"default\":\"aliyun\",\"engine\":{\"qiniu\":{\"bucket\":\"\",\"access_key\":\"\",\"secret_key\":\"\",\"domain\":\"\"},\"aliyun\":{\"bucket\":\"mall01\",\"access_key\":\"4m7fadiW15chegSP\",\"secret_key\":\"3DfscRJTs4a8BTaGsSwX8MSMejWKu4\",\"endpoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"domain\":\"http:\\/\\/mall01.oss-cn-hangzhou.aliyuncs.com\"}}}', '10001', '1557221601');
+INSERT INTO `yoshop_setting` VALUES ('storage', '上传设置', '{\"default\":\"aliyun\",\"engine\":{\"qiniu\":{\"bucket\":\"\",\"access_key\":\"\",\"secret_key\":\"\",\"domain\":\"\"},\"aliyun\":{\"bucket\":\"mall01\",\"access_key\":\"4m7fadiW15chegSP\",\"secret_key\":\"3DfscRJTs4a8BTaGsSwX8MSMejWKu4\",\"endpoint\":\"oss-cn-hangzhou.aliyuncs.com\",\"domain\":\"http:\\/\\/mall01.oss-cn-hangzhou.aliyuncs.com\"}}}', '10001', '1557553786');
 INSERT INTO `yoshop_setting` VALUES ('store', '商城设置', '{\"name\":\"\\u60a0\\u5496\\u5546\\u57ce\",\"express\":{\"id\":\"1470750\",\"keyid\":\"9529a733-fd22-435b-9e09-bcf4f0aed184\"}}', '10001', '1557449997');
 INSERT INTO `yoshop_setting` VALUES ('trade', '交易设置', '{\"order\":{\"close_days\":\"0\",\"receive_days\":\"15\",\"refund_days\":\"0\"},\"freight_rule\":\"10\"}', '10001', '1530265122');
+INSERT INTO `yoshop_setting` VALUES ('wechat', '公众号设置', '{\"app_id\":\"1123123\",\"app_secret\":\"123123\"}', '10001', '1557561223');
 
 -- ----------------------------
 -- Table structure for `yoshop_sms_logs`
@@ -4326,7 +4366,7 @@ CREATE TABLE `yoshop_store_group` (
   `title` char(100) NOT NULL DEFAULT '',
   `description` varchar(255) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '1',
-  `rules` char(80) NOT NULL DEFAULT '',
+  `rules` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -4334,7 +4374,7 @@ CREATE TABLE `yoshop_store_group` (
 -- Records of yoshop_store_group
 -- ----------------------------
 INSERT INTO `yoshop_store_group` VALUES ('1', '超级管理员', null, '1', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22');
-INSERT INTO `yoshop_store_group` VALUES ('2', '测试', '啊大大', '1', '1,49,6,2');
+INSERT INTO `yoshop_store_group` VALUES ('2', '测试', '啊大大', '1', '1,17,18,19,23,24,25,26,27,28,29,30,31,32,40,41,42,43,44,53,54,55,61,62,63,64,65,66,67,68,22');
 
 -- ----------------------------
 -- Table structure for `yoshop_store_group_access`
@@ -4372,7 +4412,7 @@ CREATE TABLE `yoshop_store_rules` (
   `sort` smallint(8) NOT NULL DEFAULT '100' COMMENT '排序',
   PRIMARY KEY (`id`),
   KEY `name` (`name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=67 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of yoshop_store_rules
@@ -4385,13 +4425,13 @@ INSERT INTO `yoshop_store_rules` VALUES ('5', '6', '', 'goods/edit', '修改商�
 INSERT INTO `yoshop_store_rules` VALUES ('6', '2', '', 'goods/index', '商品列表', '1', '1', '1', '1', '', '99');
 INSERT INTO `yoshop_store_rules` VALUES ('49', '6', '', 'goods/index', '商品列表', '1', '0', '1', '0', '', '99');
 INSERT INTO `yoshop_store_rules` VALUES ('50', '6', '', 'goods/delete', '商品删除', '1', '0', '1', '0', '', '100');
-INSERT INTO `yoshop_store_rules` VALUES ('10', '0', 'icon-order', 'order/delivery_list', '订单管理', '1', '0', '1', '1', '', '100');
+INSERT INTO `yoshop_store_rules` VALUES ('10', '0', 'icon-order', 'order/all_list', '订单管理', '1', '0', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('11', '10', '', 'order/delivery_list', '待发货', '1', '1', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('12', '10', '', 'order/receipt_list', '待收货', '1', '1', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('13', '10', '', 'order/pay_list', '待付款', '1', '1', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('14', '10', '', 'order/complete_list', '已完成', '1', '1', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('15', '10', '', 'order/cancel_list', '已取消', '1', '1', '1', '1', '', '100');
-INSERT INTO `yoshop_store_rules` VALUES ('16', '10', '', 'order/all_list', '全部订单', '1', '1', '1', '1', '', '100');
+INSERT INTO `yoshop_store_rules` VALUES ('16', '10', '', 'order/all_list', '全部订单', '1', '1', '1', '1', '', '98');
 INSERT INTO `yoshop_store_rules` VALUES ('17', '0', 'icon-guanliyuan', 'store.user/index', '管理员', '1', '0', '1', '1', '', '99');
 INSERT INTO `yoshop_store_rules` VALUES ('18', '17', '', 'store.user/index', '管理员列表', '1', '1', '1', '1', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('19', '17', '', 'store.group/index', '角色管理', '1', '1', '1', '1', '', '100');
@@ -4438,6 +4478,8 @@ INSERT INTO `yoshop_store_rules` VALUES ('63', '61', '', 'setting.express/add', 
 INSERT INTO `yoshop_store_rules` VALUES ('64', '61', '', 'setting.express/edit', '修改物流公司', '1', '2', '1', '0', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('65', '61', '', 'setting.express/delete', '删除物流公司', '1', '2', '1', '0', '', '100');
 INSERT INTO `yoshop_store_rules` VALUES ('66', '61', '', 'setting.express/company', '物流公司编码表', '1', '2', '1', '0', '', '100');
+INSERT INTO `yoshop_store_rules` VALUES ('67', '22', '', 'setting/payment', '支付设置', '1', '1', '1', '1', '', '100');
+INSERT INTO `yoshop_store_rules` VALUES ('68', '22', '', 'setting/wechat', '微信公众号设置', '1', '1', '1', '1', '', '100');
 
 -- ----------------------------
 -- Table structure for `yoshop_store_user`
@@ -4458,7 +4500,7 @@ CREATE TABLE `yoshop_store_user` (
 -- Records of yoshop_store_user
 -- ----------------------------
 INSERT INTO `yoshop_store_user` VALUES ('1', 'admin', 'b4bf70ac861dc1a8cb595f8d8e1df521', '10001', '1529926348', '1557129356');
-INSERT INTO `yoshop_store_user` VALUES ('10021', 'test1111', 'b4bf70ac861dc1a8cb595f8d8e1df521', '10001', '1557383004', '1557384093');
+INSERT INTO `yoshop_store_user` VALUES ('10021', 'test', '2689831bd77527cef9c1058e471b6b50', '10001', '1557383004', '1557562070');
 
 -- ----------------------------
 -- Table structure for `yoshop_upload_file`
@@ -4478,7 +4520,7 @@ CREATE TABLE `yoshop_upload_file` (
   `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`file_id`),
   UNIQUE KEY `path_idx` (`file_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=10039 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10043 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of yoshop_upload_file
@@ -4517,9 +4559,13 @@ INSERT INTO `yoshop_upload_file` VALUES ('10031', 'local', '0', '', '20190507172
 INSERT INTO `yoshop_upload_file` VALUES ('10032', 'local', '0', '', '201905071729502d17e9823.png', '76038', 'image', 'png', '1', '10001', '1557221390');
 INSERT INTO `yoshop_upload_file` VALUES ('10033', 'local', '0', '', '20190507172950f96c36425.png', '735', 'image', 'png', '1', '10001', '1557221390');
 INSERT INTO `yoshop_upload_file` VALUES ('10034', 'local', '0', '', '2019050717295062ffc1015.png', '1088', 'image', 'png', '1', '10001', '1557221390');
-INSERT INTO `yoshop_upload_file` VALUES ('10036', 'aliyun', '0', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '201905080857534e30f2705.jpg', '19721', 'image', 'jpg', '0', '10001', '1557277073');
-INSERT INTO `yoshop_upload_file` VALUES ('10037', 'aliyun', '0', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '20190508093704c8a708577.jpg', '249661', 'image', 'jpg', '0', '10001', '1557279424');
+INSERT INTO `yoshop_upload_file` VALUES ('10036', 'aliyun', '0', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '201905080857534e30f2705.jpg', '19721', 'image', 'jpg', '1', '10001', '1557277073');
+INSERT INTO `yoshop_upload_file` VALUES ('10037', 'aliyun', '0', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '20190508093704c8a708577.jpg', '249661', 'image', 'jpg', '1', '10001', '1557279424');
 INSERT INTO `yoshop_upload_file` VALUES ('10038', 'aliyun', '10001', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '20190508093748411622932.jpg', '249661', 'image', 'jpg', '0', '10001', '1557279469');
+INSERT INTO `yoshop_upload_file` VALUES ('10039', 'local', '0', '', '201905110910008963e8553.jpg', '249661', 'image', 'jpg', '0', '10001', '1557537000');
+INSERT INTO `yoshop_upload_file` VALUES ('10040', 'local', '0', '', '2019051109130865c9d3409.jpg', '19721', 'image', 'jpg', '0', '10001', '1557537188');
+INSERT INTO `yoshop_upload_file` VALUES ('10041', 'local', '10002', '', '201905110916257600a5497.jpg', '19721', 'image', 'jpg', '0', '10001', '1557537385');
+INSERT INTO `yoshop_upload_file` VALUES ('10042', 'aliyun', '0', 'http://mall01.oss-cn-hangzhou.aliyuncs.com', '20190511134955d8d295351.jpg', '197077', 'image', 'jpg', '0', '10001', '1557553801');
 
 -- ----------------------------
 -- Table structure for `yoshop_upload_group`
@@ -4535,12 +4581,13 @@ CREATE TABLE `yoshop_upload_group` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`group_id`),
   KEY `type_index` (`group_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=10002 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10003 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of yoshop_upload_group
 -- ----------------------------
 INSERT INTO `yoshop_upload_group` VALUES ('10001', 'image', '袜子', '100', '10001', '1557024868', '1557024868');
+INSERT INTO `yoshop_upload_group` VALUES ('10002', 'image', '用户头像', '100', '10001', '1557537279', '1557537279');
 
 -- ----------------------------
 -- Table structure for `yoshop_user`

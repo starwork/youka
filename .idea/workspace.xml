@@ -3,8 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="49ce1447-5abb-4b42-920c-eb000c8261c1" name="Default Changelist" comment="">
       <change afterPath="$PROJECT_DIR$/source/application/api/controller/Upload.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/application/api/controller/user/Message.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/source/application/common/library/wechat/WUser.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/application/common/model/Collect.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/application/common/model/Message.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/source/application/store/controller/user/Message.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/application/store/view/error.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/source/application/store/view/setting/payment.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/source/application/store/view/setting/wechat.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/source/application/task/controller/User.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/web/user.php" afterDir="false" />
@@ -90,7 +95,7 @@
           <entry key="js" value="5" />
           <entry key="json" value="3" />
           <entry key="less" value="1" />
-          <entry key="php" value="435" />
+          <entry key="php" value="436" />
           <entry key="tpl" value="1" />
         </counts>
       </usages-collector>
@@ -100,7 +105,7 @@
           <entry key="JSON" value="3" />
           <entry key="JavaScript" value="5" />
           <entry key="Less" value="1" />
-          <entry key="PHP" value="435" />
+          <entry key="PHP" value="436" />
           <entry key="PLAIN_TEXT" value="1" />
           <entry key="Smarty" value="1" />
         </counts>
@@ -164,11 +169,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/source/application/common/model/Collect.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="675">
-              <caret line="30" column="5" lean-forward="true" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+            <state relative-caret-position="513">
+              <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/source/application/common/model/Comment.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -208,15 +222,6 @@
               <folding>
                 <element signature="e#39#75#0#PHP" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/application/store/controller/user/Message.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -451,15 +456,15 @@
       <workItem from="1557275583205" duration="21347000" />
       <workItem from="1557362319977" duration="24803000" />
       <workItem from="1557449062223" duration="23484000" />
-      <workItem from="1557535240281" duration="22332000" />
+      <workItem from="1557535240281" duration="22613000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="128847000" />
+    <option name="totallyTimeSpent" value="129128000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26865673" />
@@ -687,13 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/application/common/model/Comment.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/source/thinkphp/base.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
@@ -849,8 +847,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/application/common/model/Collect.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="30" column="5" lean-forward="true" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+        <state relative-caret-position="513">
+          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/application/common/model/Comment.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
