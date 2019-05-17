@@ -2,6 +2,7 @@
 
 namespace app\task\controller;
 
+use app\common\library\oauth\WeChat;
 use app\common\library\wechat\WUser;
 use app\task\model\Setting;
 use think\Controller;
@@ -16,12 +17,23 @@ class User extends Controller
 {
     public function index()
     {
-        $config = Setting::getItem('wechat');
-        $app = new WUser($config['app_id'],$config['app_secret']);
-        if(!$user = $app->getUser($this->request->param())){
-            $error = $app->getError() ? $app->getError() : 'error';
-            return $this->error($error);
-        }
         $UserModel = new \app\api\model\User();
+        $wechat_user = $UserModel->wx_login($this->request->param('code'));
+        $user = $UserModel->where('openid',$wechat_user['openid'])->find();
+        if($user){
+            $token = $user->token();
+            // 记录缓存, 7天
+            Cache::set($this->token, $user, 86400 * 7);
+        }
     }
+
+
+    public function getUrl($state = '')
+    {
+        $config = Setting::getItem('wechat');
+        $Wechat = new WeChat($config['app_id'],$config['app_secret']);
+        $this->redirect($Wechat->getUrl($state));
+    }
+
+
 }

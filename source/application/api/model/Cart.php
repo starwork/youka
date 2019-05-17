@@ -43,7 +43,7 @@ class Cart
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getList($user)
+    public function getList($user,$address_id = 0)
     {
         // 商品列表
         $goodsList = [];
@@ -52,8 +52,13 @@ class Cart
             $goodsList[$goods['goods_id']] = $goods;
         }
         // 当前用户收货城市id
-        $cityId = $user['address_default'] ? $user['address_default']['city_id'] : null;
-
+        $address = UserAddress::where('user_id',$user['user_id'])->where('address_id',$address_id)->find();
+        if($address){
+            $cityId = $address['city_id'];
+            $user['address_default'] = $address;
+        }else{
+            $cityId = $user['address_default'] ? $user['address_default']['city_id'] : null;
+        }
         // 是否存在收货地址
         $exist_address = !$user['address']->isEmpty();
         // 商品是否在配送范围

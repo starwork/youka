@@ -3,6 +3,9 @@
 namespace app\store\controller;
 
 use app\common\library\Auth;
+use app\common\model\Menus;
+use app\store\model\StoreLog;
+use app\store\model\StoreRules;
 use think\Config;
 use think\Log;
 use think\Session;
@@ -59,7 +62,9 @@ class Controller extends \think\Controller
         $this->checkLogin();
         // 全局layout
         $this->layout();
+
     }
+
 
     /**
      * 全局layout模板输出
@@ -70,8 +75,8 @@ class Controller extends \think\Controller
         if (!in_array($this->routeUri, $this->notLayoutAction)) {
             // 输出到view
             list($menus,$group) = $this->menus();
-            Log::debug($menus);
-            Log::debug($group);
+            //Log::debug($menus);
+            //Log::debug($group);
             $this->assign([
                 'base_url' => base_url(),                      // 当前域名
                 'store_url' => url('/store'),              // 后台模块url

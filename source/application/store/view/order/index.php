@@ -6,9 +6,26 @@
                     <div class="widget-title am-cf"><?= $title ?></div>
                 </div>
                 <div class="widget-body am-fr">
-                    <form class="toolbar-form page_toolbar" action="">
+                    <form class="toolbar-form page_toolbar" action="" id="form-search">
+                        <input type="hidden" name="dataType" value="<?=$s ?>">
                         <input type="hidden" name="s" value="/store/order/<?=$s ?>">
-                        <div class="am-u-sm-12">
+                        <div class="am-u-sm-12 am-u-md-3">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a class="j-export am-btn am-btn-success am-radius"
+                                           href="javascript:void(0);" style="display: <?= check_auth('order/export', $uid) ? 'inline-block':'none' ?>;">
+                                            <i class="iconfont icon-daochu am-margin-right-xs"></i>订单导出
+                                        </a>
+                                        <a class="j-export am-btn am-btn-secondary am-radius"
+                                           href="index.php?s=/store/order.operate/batchdelivery">
+                                            <i class="iconfont icon-daoru am-margin-right-xs"></i>批量发货
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-9">
                             <div class="am fr">
                                 <div class="am-form-group tpl-form-border-form am-fl">
                                     <input type="text" name="start_time"
@@ -139,4 +156,25 @@
         </div>
     </div>
 </div>
+<script>
 
+    $(function () {
+
+        /**
+         * 订单导出
+         */
+        $('.j-export').click(function () {
+            if(!<?=check_auth('order/export',$uid) ?>){
+                return false;
+            }
+            var data = {};
+            var formData = $('#form-search').serializeArray();
+            $.each(formData, function () {
+                this.name !== 's' && (data[this.name] = this.value);
+            });
+            window.location = "index.php?s=/store/order/export" + '&' + $.urlEncode(data);
+        });
+
+    });
+
+</script>

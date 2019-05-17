@@ -27,6 +27,7 @@
                                 <th>ID</th>
                                 <th>节点名称</th>
                                 <th>url</th>
+                                <th>状态</th>
                                 <th>排序</th>
                                 <th>操作</th>
                             </tr>
@@ -35,8 +36,14 @@
                             <?php if (count($list) > 0) : foreach ($list as $item): ?>
                                 <tr>
                                     <td class="am-text-middle"><?= $item['id'] ?></td>
-                                    <td class="am-text-middle"><?= $item['prefix'].'   '.$item['title'] ?></td>
+                                    <td class="am-text-middle" style="padding-left: <?= ($item['level']*10).'px;' ?>"><?= $item['title'] ?></td>
                                     <td class="am-text-middle"><?= $item['name'] ?></td>
+                                    <td class="am-text-middle">
+                                        <span class="j-state am-badge x-cur-p
+                                           <?= $item['is_menu']['value'] ? 'am-badge-success':'' ?>" data-id="<?= $item['id'] ?>" data-state="<?= $item['is_menu']['value'] ?>">
+                                               <?= $item['is_menu']['text'] ?>
+                                        </span>
+                                    </td>
                                     <td class="am-text-middle"><?= $item['sort'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
@@ -45,7 +52,7 @@
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['id'] ?> <?= check_url('store.rule/delete',$uid) ?>">
+                                               data-id="<?= $item['id'] ?>" style="display: <?= check_auth('store.rule/delete',$uid) ? 'inline-block':'none' ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>

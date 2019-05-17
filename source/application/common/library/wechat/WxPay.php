@@ -2,10 +2,14 @@
 
 namespace app\common\library\wechat;
 
+use app\common\model\PayBank;
+use app\common\model\PriceLog;
+use app\common\model\User;
 use app\common\model\Wxapp as WxappModel;
 use app\task\model\Setting as SettingModel;
 use app\common\library\sms\Driver as SmsDriver;
 use app\common\exception\BaseException;
+use think\Db;
 
 /**
  * 微信支付
@@ -75,6 +79,71 @@ class WxPay
             'timeStamp' => (string)$time,
             'paySign' => $paySign
         ];
+    }
+
+
+    public function pay_bank($user,$price,$bank)
+    {
+        // 当前时间
+        $time = time();
+        // 生成随机字符串
+        $nonceStr = md5($time.$user['user_id']);
+        //商户企业付款单号
+        $partner_trade_no = $this->PayBankNo();
+        // API参数
+        $params = [
+            'mch_id' => $this->config['mchid'],
+            'partner_trade_no' => $partner_trade_no,
+            'nonce_str' => $nonceStr,
+            'enc_bank_no' => $bank['bank_card_no'],
+            'enc_true_name' => $bank['bank_name'],
+            'bank_code' => $bank['code'],
+            'amount' => $price * 100, // 价格:单位分
+            'desc' => '提现',
+        ];
+        // 生成签名
+        $params['sign'] = $this->makeSign($params);
+        // 请求API
+        $url = 'https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank';
+        Db::startTrans();
+        try{
+            User::where('user_id',$user['user_id'])->setDec('price',$price);
+            PriceLog::save([
+                'user_id' => $user['user_id'],
+                'price' => $price,
+                'text' => '提现',
+                'order_id' => 0
+            ]);
+            $pay_bank = PayBank::save([
+                'user_id' => $user['user_id'],
+                'bank_name' => $bank['bank_name'],
+                'card_no' => $bank['bank_card_no'],
+                'trade_no' => $partner_trade_no,
+            ]);
+            $result = $this->postXmlCurl($this->toXml($params), $url);
+            $prepay = $this->fromXml($result);
+            // 请求失败
+            if ($prepay['return_code'] === 'FAIL') {
+                throw new BaseException(['msg' => $prepay['return_msg'], 'code' => -10]);
+            }
+            if ($prepay['result_code'] === 'FAIL') {
+                throw new BaseException(['msg' => $prepay['return_msg'], 'code' => -10]);
+            }
+            Db::commit();
+            $pay_bank->save(['payment_no' => $prepay['payment_no'], 'cmms_amt' => $prepay['cmms_amt']]);
+            return true;
+        }catch (\Exception $e){
+            Db::rollback();
+            return false;
+        }
+    }
+
+    /**
+     * 生成订单号
+     */
+    protected function PayBankNo()
+    {
+        return date('Ymd') . substr(implode(NULL, array_map('bank', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     }
 
     /**

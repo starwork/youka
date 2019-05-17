@@ -38,11 +38,7 @@
                                         <?= $item['user_name'] ?>
                                     </td>
                                     <td class="am-text-middle">
-                                        <?php if (!$item['group']->isEmpty()): foreach ($item['group'] as $group): ?>
-                                        <?= $group['title'] ?>|
-                                        <?php endforeach; else: ?>
-                                        未分配角色
-                                        <?php endif; ?>
+                                        <?= $item['group'] ? implode('|',array_column($item['group']->toArray(),'title')) : '未分配角色' ?>
                                     </td>
                                     <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                     <td class="am-text-middle">
@@ -52,7 +48,7 @@
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['store_user_id'] ?> <?= check_url('store.user/delete',$uid) ?>">
+                                               data-id="<?= $item['store_user_id'] ?>" style="display: <?= check_auth('store.user/delete',$uid) && $item['store_user_id'] > 1 ? 'inline-block':'none' ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>
@@ -81,8 +77,8 @@
     $(function () {
 
         // 删除元素
-        var url = "<?= url('goods/delete') ?>";
-        $('.item-delete').delete('goods_id', url);
+        var url = "<?= url('store.user/delete') ?>";
+        $('.item-delete').delete('id', url);
 
     });
 </script>

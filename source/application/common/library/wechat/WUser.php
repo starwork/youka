@@ -29,19 +29,19 @@ class WUser
 
     public function authorize()
     {
-        $redirect_uri = base_url() . 'getUser.php';
-        return $this->authorize_url.'?appid=APPID&redirect_uri='.urlencode($redirect_uri).'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+        $redirect_uri = base_url() . 'getuser.php';
+        return $this->authorize_url.'?appid='.$this->appId.'&redirect_uri='.urlencode($redirect_uri).'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
     }
 
     public function getUser($data)
     {
         $code = $data['code'];
-        $this->getAccessToken($code);
+        $this->getOpenId($code);
         return $this->getUserInfo();
     }
 
 
-    private function getAccessToken($code)
+    private function getOpenId($code)
     {
         if(!$code){
             $this->error = 'code不存在';
@@ -52,9 +52,8 @@ class WUser
             'appid' => $this->appId,
             'secret' => $this->appSecret,
             'grant_type' => 'authorization_code',
-            'js_code' => $code
+            'code' => $code
         ]), true);
-
         if (isset($result['errcode'])) {
             $this->error = $result['errmsg'];
             return false;

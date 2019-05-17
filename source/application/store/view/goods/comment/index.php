@@ -82,8 +82,8 @@
     $(function () {
 
         // 删除元素
-        var url = "<?= url('goods/delete') ?>";
-        $('.item-delete').delete('goods_id', url);
+        var url = "<?= url('goods.comment/delete') ?>";
+        $('.item-delete').delete('id', url);
 
     });
 </script>

@@ -31,7 +31,7 @@ class Order extends OrderModel
      * @return array
      * @throws \think\exception\DbException
      */
-    public function getBuyNow($user, $goods_id, $goods_num, $goods_sku_id)
+    public function getBuyNow($user, $goods_id, $goods_num, $goods_sku_id,$address_id)
     {
         // 商品信息
         /* @var Goods $goods */
@@ -54,7 +54,8 @@ class Order extends OrderModel
         // 商品总重量
         $goods_total_weight = bcmul($goods['goods_sku']['goods_weight'], $goods_num, 2);
         // 当前用户收货城市id
-        $cityId = $user['address_default'] ? $user['address_default']['city_id'] : null;
+        $address = UserAddress::where('user_id',$user['user_id'])->where('address_id',$address_id)->find();
+        $cityId = $address ? $address['city_id'] : null;
         // 是否存在收货地址
         $exist_address = !$user['address']->isEmpty();
         // 验证用户收货地址是否存在运费规则中
@@ -64,6 +65,20 @@ class Order extends OrderModel
         // 计算配送费用
         $expressPrice = $intraRegion ?
             $goods['delivery']->calcTotalFee($goods_num, $goods_total_weight, $cityId) : 0;
+        //用户是否复购
+        $filer = [];
+        $filer['user_id'] = $user['user_id'];
+        $filer['pay_status'] = 20;
+        $count = self::where($filer)->count();
+        $tags = [];
+        //复购
+        if($count > 0){
+            $config = \app\store\model\Setting::getItem('retail');
+            $totalPrice = $totalPrice*$config['many_buy']/100;
+            $tags[] = '复购';
+        }else{
+            $tags[] = '首次';
+        }
         return [
             'goods_list' => [$goods],               // 商品详情
             'order_total_num' => $goods_num,        // 商品总数量
@@ -75,6 +90,7 @@ class Order extends OrderModel
             'intra_region' => $intraRegion,    // 当前用户收货城市是否存在配送规则中
             'has_error' => $this->hasError(),
             'error_msg' => $this->getError(),
+            'tags' => $tags
         ];
     }
 
@@ -87,10 +103,10 @@ class Order extends OrderModel
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getCart($user)
+    public function getCart($user,$address_id)
     {
         $model = new Cart($user['user_id']);
-        return $model->getList($user);
+        return $model->getList($user,$address_id);
     }
 
     /**
@@ -203,7 +219,55 @@ class Order extends OrderModel
                 break;
         }
         return $this->with(['goods.image'])
+            ->field('order_id,order_no,pay_status,total_price,express_price,delivery_status,receipt_status,comment_status')
             ->where('user_id', '=', $user_id)
+            ->where('order_status', '<>', 20)
+            ->where($filter)
+            ->order(['create_time' => 'desc'])
+            ->select();
+    }
+
+
+    /**
+     * 下级订单
+     * @param $user_id
+     * @param string $type
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getChildList($user_id, $type = 'all')
+    {
+        // 筛选条件
+        $filter = [];
+        // 订单数据类型
+        switch ($type) {
+            case 'all':
+                break;
+            case 'payment';
+                $filter['pay_status'] = 10;
+                break;
+            case 'delivery';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 10;
+                break;
+            case 'received';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 20;
+                $filter['receipt_status'] = 10;
+                break;
+            case 'comment';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 20;
+                $filter['receipt_status'] = 20;
+                $filter['comment_status'] = 20;
+                break;
+        }
+        return $this->with(['goods.image'])
+            ->alias('o')
+            ->join('user u','o.user_id = u.user_id')
+            ->where('u.pid', '=', $user_id)
             ->where('order_status', '<>', 20)
             ->where($filter)
             ->order(['create_time' => 'desc'])
@@ -258,11 +322,141 @@ class Order extends OrderModel
             $this->error = '该订单不合法';
             return false;
         }
-        return $this->save([
-            'receipt_status' => 20,
-            'receipt_time' => time(),
-            'order_status' => 30
-        ]);
+        if($this['user']['pid'] == 0){
+            return $this->save([
+                'receipt_status' => 20,
+                'receipt_time' => time(),
+                'order_status' => 30
+            ]);
+        }else{
+            $data = $this->getReward($this);
+            // 开启事务
+            Db::startTrans();
+            try {
+                $parent = $data['parent'];
+                $pparent = $data['pparent'];
+                $agent = $data['agent'];
+                $city_agent = $data['city_agent'];
+                if($parent){
+                    Db::name('price_log')->insert([
+                        'user_id' => $parent['user_id'],
+                        'price' => $parent['price'],
+                        'text' => $parent['text'],
+                        'order_id' => $this['order_id'],
+                        'create_time' => time()
+                    ]);
+                    Db::name('user')->where('user_id',$parent['user_id'])->setInc('price',$parent['price']);
+                }
+                if($pparent){
+                    Db::name('price_log')->insert([
+                        'user_id' => $pparent['user_id'],
+                        'price' => $pparent['price'],
+                        'text' => $pparent['text'],
+                        'order_id' => $this['order_id'],
+                        'create_time' => time()
+                    ]);
+                    Db::name('user')->where('user_id',$pparent['user_id'])->setInc('price',$pparent['price']);
+                }
+                if($agent){
+                    foreach ($agent as $v){
+                        Db::name('price_log')->insert([
+                            'user_id' => $v['user_id'],
+                            'price' => $v['price'],
+                            'text' => $v['text'],
+                            'order_id' => $this['order_id'],
+                            'create_time' => time()
+                        ]);
+                        Db::name('user')->where('user_id',$v['user_id'])->setInc('price',$v['price']);
+                    }
+                }
+
+                if($city_agent){
+                    foreach ($city_agent as $vv){
+                        Db::name('price_log')->insert([
+                            'user_id' => $vv['user_id'],
+                            'price' => $vv['price'],
+                            'text' => $vv['text'],
+                            'order_id' => $this['order_id'],
+                            'create_time' => time()
+                        ]);
+                        Db::name('user')->where('user_id',$vv['user_id'])->setInc('price',$vv['price']);
+                    }
+                }
+                $this->save([
+                    'receipt_status' => 20,
+                    'receipt_time' => time(),
+                    'order_status' => 30
+                ]);
+                Db::commit();
+                return true;
+            } catch (\Exception $e) {
+                Db::rollback();
+            }
+            return false;
+        }
+    }
+
+    private function addPiceLog($data)
+    {
+        Db::name('price_log')->insert($data);
+    }
+
+
+    private function getReward($order)
+    {
+        $config = \app\store\model\Setting::getItem('retail');
+
+        $parent = User::get($order['user']['pid']);  //一级分销商
+        $pparent = User::get($order['user']['ppid']);    //二级分销商
+        $parent_order_count = Db::name('order')->alias('o')->join('user u','o.user_id = u.user_id')->where('u.pid',$parent['user_id'])->where('order_status',30)->count();
+        if($parent_order_count == 0){
+            $parent['price'] = $order['total_price']*$config['first_money']/100;
+            $parent['text'] = '直推奖';
+        }else{
+            $parent_level = $parent['level']['level'];
+            if(!empty($config[$parent_level]['first_money'])){
+                $parent['price'] = $order['total_price']*$config[$parent_level]['first_money']/100;
+                $parent['text'] = '一级佣金';
+            }
+        }
+        $pparent_level = $pparent['level']['level'];
+        if(!empty($config[$pparent_level]['second_money'])){
+            $pparent['price'] = $order['total_price']*$config[$pparent_level]['second_money']/100;
+            $pparent['text'] = '二级佣金';
+        }
+        $pids = explode(',',$order['user']['path']);
+        //市场维护奖
+        //经销商
+        $agent = User::where('user_id','in',$pids)->where('level',20)->order('id','desc')->limit(2);
+        if(is_array($agent)){
+            if($agent[0]){
+                $agent[0]['price'] = $order['total_price']*$config[20]['maintain']['diect']/100;
+                $agent[0]['text'] = '经销商维护奖';
+            }
+            if($agent[1]){
+                $agent[1]['price'] = $order['total_price']*$config[20]['maintain']['indirect']/100;
+                $agent[1]['text'] = '经销商维护奖';
+            }
+        }
+        //市级代理
+        $city_agent = User::where('user_id','in',$pids)->where('level',30)->order('id','desc')->limit(2);
+        if(is_array($city_agent)){
+            if($city_agent[0]){
+                $city_agent[0]['price'] = $order['total_price']*$config[30]['maintain']['diect']/100;
+                $city_agent[0]['text'] = '市级代理维护奖';
+            }
+            if($city_agent[1]){
+                $city_agent[1]['price'] = $order['total_price']*$config[30]['maintain']['indirect']/100;
+                $city_agent[1]['text'] = '市级代理维护奖';
+            }
+        }
+        $data = [
+            'parent' => $parent,
+            'pparent' => $pparent,
+            'agent' => $agent,
+            'city_agent' => $city_agent,
+        ];
+        return $data;
     }
 
     /**
@@ -282,10 +476,19 @@ class Order extends OrderModel
             case 'payment';
                 $filter['pay_status'] = 10;
                 break;
+            case 'delivery';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 10;
+                break;
             case 'received';
                 $filter['pay_status'] = 20;
                 $filter['delivery_status'] = 20;
                 $filter['receipt_status'] = 10;
+            case 'comment';
+                $filter['pay_status'] = 20;
+                $filter['delivery_status'] = 20;
+                $filter['receipt_status'] = 20;
+                $filter['comment_status'] = 10;
                 break;
         }
         return $this->where('user_id', '=', $user_id)

@@ -5,8 +5,8 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>商城系统登录</title>
-    <link rel="icon" type="image/png" href="assets/admin/i/favicon.ico"/>
-    <link rel="stylesheet" href="assets/store/css/login/style.css"/>
+    <link rel="icon" type="image/png" href="__ASSETS__/admin/i/favicon.ico"/>
+    <link rel="stylesheet" href="__ASSETS__/store/css/login/style.css"/>
 </head>
 <body class="page-login-v3">
 <div class="container">
@@ -33,9 +33,9 @@
     </div>
 </div>
 </body>
-<script src="assets/store/js/jquery.min.js"></script>
-<script src="assets/layer/layer.js"></script>
-<script src="assets/store/js/jquery.form.min.js"></script>
+<script src="__ASSETS__/store/js/jquery.min.js"></script>
+<script src="__ASSETS__/layer/layer.js"></script>
+<script src="__ASSETS__/store/js/jquery.form.min.js"></script>
 <script>
     $(function () {
         // 表单提交

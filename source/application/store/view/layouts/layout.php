@@ -10,10 +10,10 @@
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="icon" type="image/png" href="assets/store/i/favicon.ico"/>
     <meta name="apple-mobile-web-app-title" content="<?= $setting['store']['values']['name'] ?>"/>
-    <link rel="stylesheet" href="assets/store/css/amazeui.min.css"/>
-    <link rel="stylesheet" href="assets/store/css/app.css"/>
+    <link rel="stylesheet" href="__ASSETS__/store/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="__ASSETS__/store/css/app.css"/>
     <link rel="stylesheet" href="//at.alicdn.com/t/font_783249_fc0v7ysdt1k.css">
-    <script src="assets/store/js/jquery.min.js"></script>
+    <script src="__ASSETS__/store/js/jquery.min.js"></script>
     <script src="//at.alicdn.com/t/font_783249_e5yrsf08rap.js"></script>
     <script>
         BASE_URL = '<?= isset($base_url) ? $base_url : '' ?>';
@@ -121,13 +121,13 @@
     <!-- 内容区域 end -->
 
 </div>
-<script src="assets/layer/layer.js"></script>
-<script src="assets/store/js/jquery.form.min.js"></script>
-<script src="assets/store/js/amazeui.min.js"></script>
-<script src="assets/store/js/webuploader.html5only.js"></script>
-<script src="assets/store/js/art-template.js"></script>
-<script src="assets/store/js/app.js"></script>
-<script src="assets/store/js/file.library.js"></script>
+<script src="__ASSETS__/layer/layer.js"></script>
+<script src="__ASSETS__/store/js/jquery.form.min.js"></script>
+<script src="__ASSETS__/store/js/amazeui.min.js"></script>
+<script src="__ASSETS__/store/js/webuploader.html5only.js"></script>
+<script src="__ASSETS__/store/js/art-template.js"></script>
+<script src="__ASSETS__/store/js/app.js"></script>
+<script src="__ASSETS__/store/js/file.library.js"></script>
 </body>
 
 </html>

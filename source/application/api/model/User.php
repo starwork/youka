@@ -2,11 +2,13 @@
 
 namespace app\api\model;
 
+use app\common\library\oauth\WeChat;
+use app\common\library\wechat\WUser;
 use app\common\model\User as UserModel;
 //use app\api\model\Wxapp;
-use app\common\library\wechat\WxUser;
 use app\common\exception\BaseException;
 use think\Cache;
+use think\Db;
 use think\Log;
 use think\Request;
 
@@ -37,6 +39,11 @@ class User extends UserModel
      */
     public static function getUser($token)
     {
+
+        $user = self::get(['user_id' => Cache::get($token)['user_id']]);
+        if(!empty($user)){
+            self::Upgrade($user);
+        }
 //        dump($token);exit;
         return self::detail(['user_id' => Cache::get($token)['user_id']]);
     }
@@ -90,7 +97,7 @@ class User extends UserModel
     }
 
     /**
-     * 微信登录
+     * 微信小程序登录
      * @param $code
      * @return array|mixed
      * @throws BaseException
@@ -101,7 +108,7 @@ class User extends UserModel
         // 获取当前小程序信息
         $wxapp = Wxapp::detail();
         if (empty($wxapp['app_id']) || empty($wxapp['app_secret'])) {
-            throw new BaseException(['msg' => '请到 [后台-小程序设置] 填写appid 和 appsecret']);
+            throw new BaseException(['msg' => '请到 [后台-设置-微信公众号] 填写appid 和 appsecret']);
         }
         // 微信登录 (获取session_key)
         $WxUser = new WxUser($wxapp['app_id'], $wxapp['app_secret']);
@@ -111,12 +118,27 @@ class User extends UserModel
         return $session;
     }
 
+
+    public function wx_login($code)
+    {
+        if(empty($code)){
+            throw new BaseException(['msg' => 'code is null']);
+        }
+        $config = Setting::getItem('wechat');
+        if (empty($config['app_id']) || empty($config['app_secret'])) {
+            throw new BaseException(['msg' => '请到 [后台-设置-微信公众号] 填写appid 和 appsecret']);
+        }
+        $wechat = new WeChat($config['app_id'], $config['app_secret']);
+
+        return $wechat->getUserInfo($code);
+    }
+
     /**
      * 生成用户认证的token
      * @param $openid
      * @return string
      */
-    private function token($openid)
+    public function token($openid)
     {
         $wxapp_id = self::$wxapp_id;
         // 生成一个不会重复的随机字符串
@@ -169,5 +191,55 @@ class User extends UserModel
     {
         $list = $this->where('parent',$this['user_id'])->where($filter)->paginate(15);
         return $list;
+    }
+
+
+
+    private static function Upgrade($user)
+    {
+        $level = $user['level']['level'];
+        if($level == 0){
+            //升级分销商
+            $filer = [];
+            $filer['user_id'] = $user['user_id'];
+            $filer['order_status'] = 30;
+            $order_count = Order::where($filer)->count();
+            if($order_count > 0){
+                self::where('user_id',$user['user_id'])->save(['level' => 10]);
+            }
+        }elseif ($level == 10){
+            //升级经销商
+            $filer = [];
+            $filer['pid'] = $user['user_id'];
+            $filer['level'] = 10;
+            $user_count = self::where($filer)->count();
+            if($user_count > 10){
+                self::where('user_id',$user['user_id'])->save(['level' => 20]);
+            }
+        }elseif($level == 20){
+            //升级市级代理
+            $filer = [];
+            $filer['pid'] = $user['user_id'];
+            $filer['level'] = 20;
+            $user_count = self::where($filer)->count();
+            $path = $user['path'] ? $user['path'].','.$user['user_id'] : $user['user_id'];
+            if($user_count >= 4){
+                $order_count = Db::name('order')
+                                ->alias('o')
+                                ->join('user u','o.user_id = u.user_id')
+                                ->where('o.order_status',30)
+                                ->where('u.path','like',$path.'%')->count();
+                if($order_count >= 300){
+                    $order_price = Db::name('order')
+                        ->alias('o')
+                        ->join('user u','o.user_id = u.user_id')
+                        ->where('o.order_status',30)
+                        ->where('u.path','like',$path.'%')->sum('o.total_price');
+                    if($order_price > 3000000){
+                        self::where('user_id',$user['user_id'])->save(['level' => 30]);
+                    }
+                }
+            }
+        }
     }
 }

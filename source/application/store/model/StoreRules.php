@@ -18,6 +18,15 @@ class StoreRules extends Model
 {
     protected $name = 'store_rules';
 
+    public function getIsmenuAttr($value)
+    {
+        $data = ['隐藏','显示'];
+        return [
+            'value' => $value,
+            'text' => $data[$value]
+        ];
+    }
+
     public function getList($filter= [])
     {
         $list = self::order('sort','id')->select();

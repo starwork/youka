@@ -23,4 +23,14 @@ class User extends Controller
         return $this->fetch('index', compact('list'));
     }
 
+    public function update_level()
+    {
+        $data = $this->request->post();
+        $model = UserModel::get($data['user_id']);
+        if($model->save(['level' => $data['level']])){
+            return $this->renderSuccess('修改成功');
+        }
+        return $this->renderError('修改失败');
+    }
+
 }

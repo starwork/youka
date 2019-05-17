@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\api\model\Order as OrderModel;
+use app\api\model\Setting;
 use app\api\model\Wxapp as WxappModel;
 use app\api\model\Cart as CartModel;
 use app\common\library\delivery\KdNiao;
@@ -29,6 +30,14 @@ class Order extends Controller
         $this->user = $this->getUser();   // 用户信息
     }
 
+    public function buyNowBefore($goods_id, $goods_num, $goods_sku_id,$address_id = 0)
+    {
+        // 商品结算信息
+        $model = new OrderModel;
+        $order = $model->getBuyNow($this->user, $goods_id, $goods_num, $goods_sku_id,$address_id);
+        return $this->renderSuccess($order);
+    }
+
     /**
      * 订单确认-立即购买
      * @param $goods_id
@@ -39,11 +48,11 @@ class Order extends Controller
      * @throws \think\exception\DbException
      * @throws \Exception
      */
-    public function buyNow($goods_id, $goods_num, $goods_sku_id)
+    public function buyNow($goods_id, $goods_num, $goods_sku_id,$address_id = 0)
     {
         // 商品结算信息
         $model = new OrderModel;
-        $order = $model->getBuyNow($this->user, $goods_id, $goods_num, $goods_sku_id);
+        $order = $model->getBuyNow($this->user, $goods_id, $goods_num,$address_id );
         if (!$this->request->isPost()) {
             return $this->renderSuccess($order);
         }
@@ -63,6 +72,13 @@ class Order extends Controller
         return $this->renderError($error);
     }
 
+    public function cartBefore($address_id = 0)
+    {
+        // 商品结算信息
+        $model = new OrderModel;
+        $order = $model->getCart($this->user,$address_id);
+        return $this->renderSuccess($order);
+    }
     /**
      * 订单确认-购物车结算
      * @return array
@@ -108,8 +124,9 @@ class Order extends Controller
      */
     private function wxPay($order_no, $open_id, $pay_price)
     {
-        $wxConfig = WxappModel::getWxappCache();
-        $WxPay = new WxPay($wxConfig);
+//        $wxConfig = WxappModel::getWxappCache();
+        $wxConfig = Setting::getItem('payment');
+        $WxPay = new WxPay($wxConfig['engine']['wechat']);
         return $WxPay->unifiedorder($order_no, $open_id, $pay_price);
     }
 

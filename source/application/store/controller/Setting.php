@@ -4,6 +4,7 @@ namespace app\store\controller;
 
 use app\common\library\sms\Driver as SmsDriver;
 use app\store\model\Setting as SettingModel;
+use think\Cache;
 use think\Log;
 
 /**
@@ -108,6 +109,11 @@ class Setting extends Controller
         return $this->updateEvent('wechat');
     }
 
+
+    public function retail()
+    {
+        return $this->updateEvent('retail');
+    }
     /**
      * 更新商城设置事件
      * @param $key

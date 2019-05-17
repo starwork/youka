@@ -7,6 +7,7 @@ use app\api\model\Order as OrderModel;
 use app\api\model\Wxapp as WxappModel;
 use app\common\library\wechat\WxPay;
 use app\api\model\Setting as SettingModel;
+use app\api\model\Comment as CommentModel;
 use app\common\library\delivery\KdNiao;
 use app\common\model\Express;
 
@@ -125,7 +126,7 @@ class Order extends Controller
      */
     public function express($order_id)
     {
-        $order = OrderModel::with('address')->where('order_id',$order_id)->where('user_id',$this->user['user_id'])->find();
+        $order = OrderModel::with('address')-> where('order_id',$order_id)->where('user_id',$this->user['user_id'])->find();
         if($order){
             $config = SettingModel::getItem('store', $this->wxapp_id);
             $delivery = new KdNiao($config);
@@ -142,7 +143,7 @@ class Order extends Controller
                 }
                 if($order['receipt_time']){
                     $data = [
-                        'AcceptStation' => '[收货地址]'.$order['address']['region'].' '.$order['address']['detail'],
+                        'AcceptStation' => '[收货地址]'.implode('',$order['address']['region']).' '.$order['address']['detail'],
                         'AcceptTime' => date('Y-m-d H:i:s',$order['receipt_time'])
                     ];
                     array_push($list,$data);
@@ -150,6 +151,18 @@ class Order extends Controller
             }
             return $this->renderSuccess($list);
         }
+        return $this->renderError('订单不存在');
+    }
+
+    public function comment()
+    {
+        $user = $this->getUser();
+        $model = New CommentModel();
+        if(!$model->add($user,$this->request->post())){
+            $error = $model->getError() ?  $model->getError() : '提交失败';
+            return $this->renderError($error);
+        }
+        return $this->renderSuccess('提交成功');
     }
 
 }

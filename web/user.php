@@ -3,7 +3,7 @@
 // [ 获取微信用户信息入口文件 ]
 
 // 手动定义路由
-$_GET['s'] = '/task/user/index';
+$_GET['s'] = '/task/user/getUrl';
 
 // 定义运行目录
 define('WEB_PATH', __DIR__ . '/');

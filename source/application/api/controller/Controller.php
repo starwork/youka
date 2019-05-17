@@ -51,6 +51,8 @@ class Controller extends ThinkController
      */
     protected function getUser()
     {
+        $user = UserModel::get(3);
+        return $user;
 //        dump($this->request->header());exit;
         if (!$token = $this->request->header('token')) {
             throw new BaseException(['code' => -1, 'msg' => '缺少必要的参数：token']);

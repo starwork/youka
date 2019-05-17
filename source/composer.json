@@ -20,7 +20,9 @@
     "topthink/framework": "5.0.*",
     "qiniu/php-sdk": "^7.2",
     "aliyuncs/oss-sdk-php": "^2.3",
-    "endroid/qrcode": "^3.5"
+    "endroid/qr-code": "^3.5",
+    "topthink/think-helper": "^3.0",
+    "phpoffice/phpexcel": "^1.8"
   },
   "autoload": {
     "psr-4": {

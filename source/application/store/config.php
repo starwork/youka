@@ -25,6 +25,9 @@ return [
         // 标签库标签结束标记
         'taglib_end'   => '}}',
     ],
+    'view_replace_str' => [
+        '__ASSETS__' => '/assets/'
+    ],
     'dispatch_error_tmpl'    => APP_PATH . 'store/view/error.php',
     'auth' => [
         'auth_on'           => 1, // 权限开关

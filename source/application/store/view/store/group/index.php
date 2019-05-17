@@ -46,7 +46,7 @@
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['id'] ?> <?= check_url('store.group/delete',$uid) ?>">
+                                               data-id="<?= $item['id'] ?>" style="display: <?= check_auth('store.group/delete',$uid) && $item['id'] > 1 ? 'inline-block':'none' ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>

@@ -1812,3 +1812,7 @@ ul.am-dropdown-content>li>a {
   border: none;
   font-size: 13px;
 }
+.x-cur-p {
+  cursor: pointer;
+  user-select: none;
+}

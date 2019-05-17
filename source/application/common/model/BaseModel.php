@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use think\Db;
 use think\Model;
 use think\Request;
 use think\Session;
@@ -27,6 +28,34 @@ class BaseModel extends Model
         // 后期静态绑定wxapp_id
         self::$wxapp_id = '10001';
         //self::bindWxappId(get_called_class());
+        self::afterWrite(function ($model){
+            self::SaveStoreLog();
+        });
+        self::afterDelete(function ($model){
+            self::SaveStoreLog();
+        });
+    }
+
+    private static function SaveStoreLog()
+    {
+        $request = Request::instance();
+        // 控制器名称
+        $controller = toUnderScore($request->controller());
+        // 方法名称
+        $action = $request->action();
+        // 当前uri
+        $url = $controller . '/' . $action;
+        $store = Session::get('yoshop_store');
+        if($store){
+            $data = [
+                'store_user_id' => $store['user']['store_user_id'],
+                'name' => $url,
+                'title' => Db::name('store_rules')->where('name',$url)->order('level','desc')->value('title'),
+                'data' => json_encode($request->param()),
+                'create_time' => time()
+            ];
+            Db::name('store_log')->insert($data);
+        }
     }
 
     /**

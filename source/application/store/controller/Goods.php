@@ -48,6 +48,26 @@ class Goods extends Controller
         return $this->renderError($error);
     }
 
+    public function state($goods_id,$state)
+    {
+        $model = GoodsModel::get($goods_id);
+        if($state){
+            $data = [
+                'goods_status' => 10
+            ];
+        }else{
+            $data = [
+                'goods_status' => 20
+            ];
+        }
+        $msg = $state ? '上架' : '下架';
+        if($model->save($data)){
+            return $this->renderSuccess($msg.'成功');
+        }else{
+            return $this->renderSuccess($msg.'失败');
+        }
+    }
+
     /**
      * 删除商品
      * @param $goods_id

@@ -69,7 +69,7 @@
                     </form>
                     <div class="am-scrollable-horizontal am-u-sm-12">
                         <table width="100%" class="am-table am-table-compact am-table-striped
-                         tpl-table-black am-text-nowrap">
+                         tpl-table-black am-text-nowrap" id="table">
                             <thead>
                             <tr>
                                 <th>商品ID</th>
@@ -106,10 +106,10 @@
                                     <td class="am-text-middle"><?= $item['sales_actual'] ?></td>
                                     <td class="am-text-middle"><?= $item['goods_sort'] ?></td>
                                     <td class="am-text-middle">
-                                            <span class="<?= $item['goods_status']['value'] == 10 ? 'x-color-green'
-                                                : 'x-color-red' ?>">
-                                            <?= $item['goods_status']['text'] ?>
-                                            </span>
+                                        <span class="j-state am-badge x-cur-p
+                                           <?= $item['goods_status']['value'] == 10 ? 'am-badge-success':'' ?>" data-id="<?= $item['goods_id'] ?>" data-state="<?= $item['goods_status']['value'] ?>">
+                                               <?= $item['goods_status']['text'] ?>
+                                        </span>
                                     </td>
                                     <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                     <td class="am-text-middle">
@@ -119,7 +119,7 @@
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['goods_id'] ?> <?= check_url('goods/delete',$uid) ?>">
+                                               data-id="<?= $item['goods_id'] ?>" style="display: <?= check_auth('goods/delete',$uid) ? 'inline-block' : 'none' ?>;">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>
@@ -146,7 +146,29 @@
 </div>
 <script>
     $(function () {
+        // 商品状态
+        $('.j-state').click(function () {
+            // 验证权限
+            if (!<?= check_auth('goods/state',$uid) ?>) {
+                return false;
+            }
+            var data = $(this).data();
+            layer.confirm('确定要' + (parseInt(data.state) === 10 ? '下架' : '上架') + '该商品吗？'
+                , {title: '友情提示'}
+                , function (index) {
+                    $.post("index.php?s=/store/goods/state"
+                        , {
+                            goods_id: data.id,
+                            state: Number(!(parseInt(data.state) === 10))
+                        }
+                        , function (result) {
+                            result.code === 1 ? $.show_success(result.msg, result.url)
+                                : $.show_error(result.msg);
+                        });
+                    layer.close(index);
+                });
 
+        });
         // 删除元素
         var url = "<?= url('goods/delete') ?>";
         $('.item-delete').delete('goods_id', url);
