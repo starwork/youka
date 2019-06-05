@@ -10,7 +10,7 @@ namespace app\api\controller;
 
 use app\api\model\BankCard as BankCardModel;
 
-class BankCard extends Controller
+class Bank extends Controller
 {
     /* @var \app\api\model\User $user */
     private $user;
