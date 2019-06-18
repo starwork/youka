@@ -8,8 +8,9 @@
 
 namespace app\api\model;
 
+use app\common\model\Tags as TagsModel;
 
-class Tags
+class Tags extends TagsModel
 {
 
 }

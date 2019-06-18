@@ -26,6 +26,39 @@ class Message extends Controller
         return $this->fetch('index',compact('list'));
     }
 
+    public function send()
+    {
+        $model = new MessageModel();
+        $type_arr = $model->type_arr;
+        if($this->request->isAjax()){
+            $data = $this->postData('message');
+            if(!in_array($data['type'],array_keys($type_arr))){
+                return $this->renderError('类型不正确');
+            }
+            if($data['type'] == 'notice'){
+                $uids = explode('|',$data['uids']);
+                if(empty($uids)){
+                    return $this->renderError('输入发送会员');
+                }
+                foreach ($uids as $uid){
+                    $save_data = [
+                        'user_id' => $uid,
+                        'title' => $data['title'],
+                        'type' => $data['type'],
+                        'content' => $data['content']
+                    ];
+                    $model->add($save_data);
+                }
+                return $this->renderSuccess('发送成功');
+            }else{
+                $model->add($data);
+                return $this->renderSuccess('发送成功');
+            }
+        }
+
+        return $this->fetch('send',compact('type_arr'));
+    }
+
 
     public function add()
     {

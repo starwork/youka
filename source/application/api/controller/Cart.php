@@ -50,7 +50,7 @@ class Cart extends Controller
      * @return array
      * @throws \think\exception\DbException
      */
-    public function add($goods_id, $goods_num, $goods_sku_id)
+    public function add($goods_id, $goods_num = 1, $goods_sku_id = '')
     {
         if (!$this->model->add($goods_id, $goods_num, $goods_sku_id)) {
             return $this->renderError($this->model->getError() ?: '加入购物车失败');
@@ -65,7 +65,7 @@ class Cart extends Controller
      * @param $goods_sku_id
      * @return array
      */
-    public function sub($goods_id, $goods_sku_id)
+    public function sub($goods_id, $goods_sku_id = '')
     {
         $this->model->sub($goods_id, $goods_sku_id);
         return $this->renderSuccess();
@@ -77,9 +77,15 @@ class Cart extends Controller
      * @param $goods_sku_id
      * @return array
      */
-    public function delete($goods_id, $goods_sku_id)
+    public function delete($goods_id, $goods_sku_id = '')
     {
         $this->model->delete($goods_id, $goods_sku_id);
+        return $this->renderSuccess();
+    }
+
+    public function clear()
+    {
+        $this->model->clearAll();
         return $this->renderSuccess();
     }
 

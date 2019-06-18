@@ -9,15 +9,21 @@
 namespace app\common\model;
 
 
+use think\Db;
 use think\Request;
 
 class Message extends BaseModel
 {
     protected $name = 'message';
 
+    public $type_arr = [
+        'system' => '系统消息',
+        'notice' => '通知消息',
+    ];
+
     public function user()
     {
-        return $this->hasOne('User');
+        return $this->belongsTo('User');
     }
 
     public function getStatusAttr($value)
@@ -28,7 +34,7 @@ class Message extends BaseModel
 
     public function getList($filter)
     {
-        return $this->with('user')->where($filter)->paginate(15,false,[
+        return $this->with('user')->where($filter)->order('id','desc')->paginate(15,false,[
             'query' => Request::instance()->request()
         ]);
     }
@@ -38,9 +44,38 @@ class Message extends BaseModel
         return $this->allowField(true)->save($data);
     }
 
-    public function edit($data)
+    /**
+     *  发送通知
+     * @param $title
+     * @param $content
+     * @param $user_id
+     * @return false|int
+     */
+    public function sendNotice($title,$content,$user_id)
     {
-        return $this->allowField(true)->save($data);
+        $data = [
+            'title' => $title,
+            'content' => $content,
+            'user_id' => $user_id,
+            'type' => 'notice',
+        ];
+        return $this->add($data);
+    }
+
+    /**
+     * 发送系统消息
+     * @param $title
+     * @param $content
+     * @return false|int
+     */
+    public function sendSystem($title,$content)
+    {
+        $data = [
+            'title' => $title,
+            'content' => $content,
+            'type' => 'system',
+        ];
+        return $this->add($data);
     }
 
     public function read()
@@ -57,6 +92,9 @@ class Message extends BaseModel
 
     public function remove()
     {
+        if($this['type'] == 'system'){
+            Db::name('message_user')->where('message_id',$this['id'])->delete();
+        }
         return $this->delete();
     }
 }

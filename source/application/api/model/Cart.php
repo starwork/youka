@@ -35,6 +35,105 @@ class Cart
     }
 
     /**
+     * 订单计算
+     * @param $data  商品数组 [['goods_id'=>'','goods_num'=>1,'goods_suk_id'=>1]]
+     * @param $user
+     * @param int $address_id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getGoodsList($data,$user,$address_id = 0)
+    {
+        // 商品列表
+        $goodsList = [];
+        $goodsIds = array_unique(array_column($data, 'goods_id'));
+        foreach ((new Goods)->getListByIds($goodsIds) as $goods) {
+            $goodsList[$goods['goods_id']] = $goods;
+        }
+        // 当前用户收货城市id
+        $address = UserAddress::where('user_id',$user['user_id'])->where('address_id',$address_id)->find();
+        if($address){
+            $cityId = $address['city_id'];
+            $user['address_default'] = $address;
+        }else{
+            $cityId = $user['address_default'] ? $user['address_default']['city_id'] : null;
+        }
+        // 是否存在收货地址
+        $exist_address = !$user['address']->isEmpty();
+        // 商品是否在配送范围
+        $intraRegion = true;
+        // 商品列表
+        $List = [];
+        foreach ($data as $key => $cart){
+            $goods = $goodsList[$cart['goods_id']];
+            // 商品sku信息
+            $goods['goods_sku_id'] = $cart['goods_sku_id'];
+            // 商品sku不存在则自动删除
+            if (!$goods['goods_sku'] = $goods->getGoodsSku($cart['goods_sku_id'])) {
+                continue;
+            }
+            // 判断商品是否下架
+            if ($goods['goods_status']['value'] != 10) {
+                $this->setError('很抱歉，商品 [' . $goods['goods_name'] . '] 已下架');
+            }
+            // 判断商品库存
+            if ($cart['goods_num'] > $goods['goods_sku']['stock_num']) {
+                $this->setError('很抱歉，商品 [' . $goods['goods_name'] . '] 库存不足');
+            }
+            // 商品单价
+            $goods['goods_price'] = $goods['goods_sku']['goods_price'];
+            // 商品总价
+            $goods['total_num'] = $cart['goods_num'];
+            $goods['total_price'] = $total_price = bcmul($goods['goods_price'], $cart['goods_num'], 2);
+            // 商品总重量
+            $goods['goods_total_weight'] = bcmul($goods['goods_sku']['goods_weight'], $cart['goods_num'], 2);
+            // 验证用户收货地址是否存在运费规则中
+            if ($intraRegion = $goods['delivery']->checkAddress($cityId)) {
+                $goods['express_price'] = $goods['delivery']->calcTotalFee(
+                    $cart['goods_num'], $goods['goods_total_weight'], $cityId);
+            } else {
+                $exist_address && $this->setError("很抱歉，您的收货地址不在商品 [{$goods['goods_name']}] 的配送范围内");
+            }
+            $List[] = $goods->toArray();
+        }
+        //是否复购
+        $exist_many = $this->getMany() > 0 ? 1: 0;
+        // 商品总金额
+        $orderTotalPrice = array_sum(array_column($List, 'total_price'));
+        if($exist_many){
+            $config = Setting::getItem('retail');
+            if(!empty($config['many_buy']) && $config['many_buy'] < 100){
+                $orderTotalPrice = round($orderTotalPrice/100*$config['many_buy'],2);
+            }
+        }
+        // 所有商品的运费金额
+        $allExpressPrice = array_column($List, 'express_price');
+        // 订单总运费金额
+        $expressPrice = $allExpressPrice ? Delivery::freightRule($allExpressPrice) : 0.00;
+        return [
+            'goods_list' => $List,                       // 商品列表
+            'order_total_num' => array_sum(array_column($data,'goods_num')),       // 商品总数量
+            'order_total_price' => round($orderTotalPrice, 2),              // 商品总金额 (不含运费)
+            'order_pay_price' => bcadd($orderTotalPrice, $expressPrice, 2),    // 实际支付金额
+            'address' => $address,  // 默认地址
+            'exist_many' => $exist_many,      // 是否复购
+            'exist_address' => $exist_address,      // 是否存在收货地址
+            'express_price' => $expressPrice,       // 配送费用
+            'intra_region' => $intraRegion,         // 当前用户收货城市是否存在配送规则中
+            'has_error' => $this->hasError(),
+            'error_msg' => $this->getError(),
+        ];
+    }
+
+
+    private function getMany()
+    {
+        return Order::where('user_id',$this->user_id)->where('pay_status',20)->count();
+    }
+
+    /**
      * 购物车列表
      * @param \think\Model|\think\Collection $user
      * @return array
@@ -110,6 +209,7 @@ class Cart
         $allExpressPrice = array_column($cartList, 'express_price');
         // 订单总运费金额
         $expressPrice = $allExpressPrice ? Delivery::freightRule($allExpressPrice) : 0.00;
+
         return [
             'goods_list' => $cartList,                       // 商品列表
             'order_total_num' => $this->getTotalNum(),       // 商品总数量

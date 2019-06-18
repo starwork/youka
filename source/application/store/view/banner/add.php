@@ -6,32 +6,46 @@
                     <div class="widget-body">
                         <fieldset>
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">添加管理员</div>
+                                <div class="widget-title am-fl">添加幻灯片</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">用户名 </label>
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">banner名称</label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <input type="text" class="tpl-form-input" name="user[user_name]" autocomplete="off"
+                                    <input type="text" class="tpl-form-input" name="banner[title]" autocomplete="off"
                                            value="" required>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">密码 </label>
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">上传图片 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <input type="password" class="tpl-form-input" name="user[password]" autocomplete="off"
-                                           value="" required>
+                                    <div class="am-form-file">
+                                        <div class="am-form-file">
+                                            <button type="button"
+                                                    class="upload-file am-btn am-btn-secondary am-radius">
+                                                <i class="am-icon-cloud-upload"></i> 选择图片
+                                            </button>
+                                            <div class="uploader-list am-cf">
+                                            </div>
+                                        </div>
+                                        <div class="help-block am-margin-top-sm">
+                                            <small>尺寸750x500像素，大小2M以下</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">角色 </label>
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label">跳转地址</label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <select name="user[group_ids][]"
-                                            data-am-selected="{searchBox: 1, btnSize: 'sm'}" multiple>
-                                        <?php if (isset($list)): foreach ($list as $first): ?>
-                                            <option value="<?= $first['id'] ?>">
-                                                <?= $first['title'] ?></option>
-                                        <?php endforeach; endif; ?>
-                                    </select>
+                                    <input type="text" class="tpl-form-input" name="banner[url]" autocomplete="off"
+                                           value="">
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">排序</label>
+                                <div class="am-u-sm-9 am-u-end">
+                                    <input type="text" class="tpl-form-input" name="banner[sort]" autocomplete="off"
+                                           value="100" required>
                                 </div>
                             </div>
                             <div class="am-form-group">
@@ -47,10 +61,18 @@
         </div>
     </div>
 </div>
+<!-- 图片文件列表模板 -->
+{{include file="layouts/_template/tpl_file_item" /}}
 
+<!-- 文件库弹窗 -->
+{{include file="layouts/_template/file_library" /}}
 
 <script>
     $(function () {
+        // 选择图片
+        $('.upload-file').selectImages({
+            name: 'banner[file_id]'
+        });
         /**
          * 表单验证提交
          * @type {*}

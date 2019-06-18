@@ -8,8 +8,11 @@
 
 namespace app\api\model;
 
+use app\common\model\Bank as BankModel;
 
-class Bank
+class Bank extends BankModel
 {
-
+    protected $hidden = [
+        'create_time'
+    ];
 }

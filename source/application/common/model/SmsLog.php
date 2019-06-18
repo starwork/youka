@@ -14,10 +14,11 @@ class SmsLog extends BaseModel
     protected $name = 'sms_logs';
 
     public function getByPhoneData($type,$phone){
-        if(!$sms_log = self::where('phone',$phone)->order('create_time','desc')->find()){
+        if(!$sms_log = self::where('phone',$phone)->where('status',10)->where('type',$type)->order('create_time','desc')->find()){
             $this->error = '';
             return false;
         }
-        return json_encode($sms_log['data'],true);
+        $sms_log['data'] = json_decode($sms_log['data'],true);
+        return $sms_log;
     }
 }

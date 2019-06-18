@@ -6,30 +6,45 @@
                     <div class="widget-body">
                         <fieldset>
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">新增物流公司</div>
+                                <div class="widget-title am-fl">新增银行</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">物流公司名称 </label>
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">银行名称 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <input type="text" class="tpl-form-input" name="express[name]"
+                                    <input type="text" class="tpl-form-input" name="bank[name]"
                                            value="" required>
-                                    <small>请对照 <a href="<?=url('setting.express/company')  ?>" target="_blank">物流公司编码表</a> 填写</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">物流公司代码 </label>
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">银行代码 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <input type="text" class="tpl-form-input" name="express[code]"
+                                    <input type="text" class="tpl-form-input" name="bank[code]"
                                            value="" required>
-                                    <small>用于快递鸟查询物流信息，务必填写正确</small>
                                 </div>
                             </div>
-
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">银行图标 </label>
+                                <div class="am-u-sm-9 am-u-end">
+                                    <div class="am-form-file">
+                                        <div class="am-form-file">
+                                            <button type="button"
+                                                    class="upload-file am-btn am-btn-secondary am-radius">
+                                                <i class="am-icon-cloud-upload"></i> 选择图片
+                                            </button>
+                                            <div class="uploader-list am-cf">
+                                            </div>
+                                        </div>
+                                        <div class="help-block am-margin-top-sm">
+                                            <small>尺寸100x100像素，大小2M以下</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">排序 </label>
                                 <div class="am-u-sm-9 am-u-end">
-                                    <input type="number" class="tpl-form-input" name="express[sort]"
+                                    <input type="number" class="tpl-form-input" name="bank[sort]"
                                            value="100" required>
                                     <small>数字越小越靠前</small>
                                 </div>
@@ -47,8 +62,17 @@
         </div>
     </div>
 </div>
+<!-- 图片文件列表模板 -->
+{{include file="layouts/_template/tpl_file_item" /}}
+
+<!-- 文件库弹窗 -->
+{{include file="layouts/_template/file_library" /}}
 <script>
     $(function () {
+        // 选择图片
+        $('.upload-file').selectImages({
+            name: 'bank[icon]'
+        });
         /**
          * 表单验证提交
          * @type {*}

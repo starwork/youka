@@ -4,6 +4,7 @@ namespace app\api\controller\user;
 
 use app\api\controller\Controller;
 use app\api\model\Order as OrderModel;
+use app\api\model\OrderGoods;
 use app\api\model\Wxapp as WxappModel;
 use app\common\library\wechat\WxPay;
 use app\api\model\Setting as SettingModel;
@@ -48,6 +49,21 @@ class Order extends Controller
     }
 
     /**
+     * 下级订单列表
+     * @param $dataType
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function ChildLists($dataType)
+    {
+        $model = new OrderModel;
+        $list = $model->getChildList($this->user['user_id'], $dataType);
+        return $this->renderSuccess(compact('list'));
+    }
+
+    /**
      * 订单详情信息
      * @param $order_id
      * @return array
@@ -88,6 +104,17 @@ class Order extends Controller
     {
         $model = OrderModel::getUserOrderDetail($order_id, $this->user['user_id']);
         if ($model->receipt()) {
+                $config = SettingModel::get('wechat');
+                if(!empty($config['receipt_id']) && !empty($this->user['open_id'])){
+                    $wechat = new WeChat($config);
+                    $data = [
+                        'first' => '亲，您的订单已签收。',
+                        'keyword1' => $model['order_no'],
+                        'keyword2' => date('Y年m月d日 H:i:s'),
+                        'remark' => ''
+                    ];
+                    $wechat->send($config['receipt_id'],$this->user['open_id'],$data);
+                }
             return $this->renderSuccess();
         }
         return $this->renderError($model->getError());
@@ -109,8 +136,9 @@ class Order extends Controller
             return $this->renderError($order->getError());
         }
         // 发起微信支付
-        $wxConfig = WxappModel::getWxappCache();
-        $WxPay = new WxPay($wxConfig);
+        //$wxConfig = WxappModel::getWxappCache();
+        $config = SettingModel::getItem('wechat');
+        $WxPay = new WxPay($config);
         $wxParams = $WxPay->unifiedorder($order['order_no'], $this->user['open_id'], $order['pay_price']);
         return $this->renderSuccess($wxParams);
     }
@@ -132,11 +160,21 @@ class Order extends Controller
             $delivery = new KdNiao($config);
             $company = Express::find($order['express_id']);
             $result = $delivery->Search($order['express_no'],$company['code']);
+            $ren = [];
             if($result['Success']){
                 $list = $result['Traces'];
+                foreach ($list as $value){
+                    if(strpos($value['AcceptStation'],'派件人:') !== false){
+                        $arr = explode('派件人:',$value['AcceptStation']);
+                        $arr1 = isset($arr[1]) ? explode('派件中',$arr[1]) : '';
+                        $ren['name'] = $arr1[0] ?  $arr1[0] : '';
+                        $ren['phone'] = $arr1[1] ? str_replace('派件员电话','',$arr1[1]) : '';
+                    }
+                }
                 if($order['delivery_time']){
                     $data = [
                         'AcceptStation' => '已发货',
+                        'msg' => '包裹正在等待揽收',
                         'AcceptTime' => date('Y-m-d H:i:s',$order['delivery_time'])
                     ];
                     array_unshift($list,$data);
@@ -149,7 +187,8 @@ class Order extends Controller
                     array_push($list,$data);
                 }
             }
-            return $this->renderSuccess($list);
+            $list = array_reverse($list);
+            return $this->renderSuccess(compact('list','ren'));
         }
         return $this->renderError('订单不存在');
     }
@@ -158,9 +197,20 @@ class Order extends Controller
     {
         $user = $this->getUser();
         $model = New CommentModel();
-        if(!$model->add($user,$this->request->post())){
-            $error = $model->getError() ?  $model->getError() : '提交失败';
-            return $this->renderError($error);
+        $goods = $this->request->post('goods/a');
+        $order_id = $this->request->post('order_id',0);
+        foreach ($goods as $good){
+            $order_goods = (new OrderGoods())->where('order_id',$order_id)->where('goods_id',$good['goods_id'])->find();
+            if($order_goods && !empty($good['content'])){
+                $data = [
+                    'user_id' => $user['user_id'],
+                    'order_id' => $order_id,
+                    'goods_id' => $good['goods_id'],
+                    'content' => $good['content']
+                ];
+                $model->save($data);
+            }
+            (new \app\api\model\Order())->where('order_id',$order_id)->update(['comment_status' => 20]);
         }
         return $this->renderSuccess('提交成功');
     }

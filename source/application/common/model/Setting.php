@@ -67,7 +67,8 @@ class Setting extends BaseModel
     {
         $self = new static;
         is_null($wxapp_id) && $wxapp_id = $self::$wxapp_id;
-        if (!$data = Cache::get('setting_' . $wxapp_id)) {
+        //if (!$data = Cache::get('setting_' . $wxapp_id)) {
+        if (true) {
             $data = array_column(collection($self::all())->toArray(), null, 'key');
             Cache::set('setting_' . $wxapp_id, $data);
         }

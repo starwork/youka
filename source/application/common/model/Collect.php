@@ -16,9 +16,19 @@ class Collect extends BaseModel
     protected $name = 'collect';
     protected $updateTime = false;
 
+    protected $append = [
+      'price'
+    ];
+
+    public function getPriceAttr($value,$data)
+    {
+        $price = (new GoodsSpec())->where('goods_id',$data['goods_id'])->min('goods_price');
+        return $price;
+    }
+
     public function goods()
     {
-        return $this->hasOne('Goods');
+        return $this->belongsTo('Goods');
     }
     public function getList($filder)
     {

@@ -2,8 +2,12 @@
 
 namespace app\store\controller;
 
+use app\common\library\wechat\TplMsg;
+use app\common\library\wechat\WeChat;
 use app\common\model\Express;
 use app\store\model\Order as OrderModel;
+use app\store\model\Setting as SettingModel;
+use app\store\model\User as UserModel;
 use think\Log;
 
 /**
@@ -96,6 +100,7 @@ class Order extends Controller
         $start_time = $this->request->param('start_time');
         $end_time = $this->request->param('end_time');
         $search = $this->request->param('search');
+        $user_id = $this->request->param('user_id');
         if($start_time != '' && $end_time != ''){
             $start_time1 = strtotime($start_time);
             $filter['create_time'][] = ['>=',$start_time1];
@@ -114,6 +119,9 @@ class Order extends Controller
 
         if($search != ''){
             $filter['order_no'] = ['like','%'.$search.'%'];
+        }
+        if($user_id > 0){
+            $filter['user_id'] = $user_id;
         }
         $list = $model->getList($filter);
         $s  = $this->action;
@@ -249,6 +257,7 @@ class Order extends Controller
         csv_export($data,$headlist,'order-'.date('Ymd'));
     }
 
+
     /**
      * 订单详情
      * @param $order_id
@@ -271,16 +280,34 @@ class Order extends Controller
     public function delivery($order_id)
     {
         $model = OrderModel::detail($order_id);
+
         if ($model->delivery($this->postData('order'))) {
+
+            $openid = UserModel::where('user_id',$model['user_id'])->value('open_id');
+            if($openid){
+                $tpl = new TplMsg();
+                $tpl->SendTmpl($openid,'delivery',$model);
+            }
             return $this->renderSuccess('发货成功');
         }
         $error = $model->getError() ?: '发货失败';
         return $this->renderError($error);
     }
 
-    public function edit_price()
+    public function money_delivery()
     {
+        $file = $this->request->file('file');
+        if($file){
+            $info = $file->move( dirname(ROOT_PATH) . DS . 'web' . DS . 'uploads');
+            return $info;
+        }
 
+    }
+
+
+    public function editprice($order_id)
+    {
+        $model = OrderModel::detail($order_id);
     }
 
 }

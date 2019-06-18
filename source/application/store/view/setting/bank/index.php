@@ -3,7 +3,7 @@
         <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
             <div class="widget am-cf">
                 <div class="widget-head am-cf">
-                    <div class="widget-title am-cf">物流公司列表</div>
+                    <div class="widget-title am-cf">银行列表</div>
                 </div>
                 <div class="widget-body am-fr">
                     <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
@@ -11,7 +11,7 @@
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
                                     <a class="am-btn am-btn-default am-btn-success am-radius"
-                                       href="<?= check_url('setting.express/add',$uid) ?>">
+                                       href="<?= check_url('setting.bank/add',$uid) ?>">
                                         <span class="am-icon-plus"></span> 新增
                                     </a>
                                 </div>
@@ -22,9 +22,9 @@
                         <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black ">
                             <thead>
                             <tr>
-                                <th>物流公司ID</th>
-                                <th>物流公司名称</th>
-                                <th>物流公司代码</th>
+                                <th>ID</th>
+                                <th>银行名称</th>
+                                <th>银行代码</th>
                                 <th>排序</th>
                                 <th>添加时间</th>
                                 <th>操作</th>
@@ -41,12 +41,12 @@
                                         <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                         <td class="am-text-middle">
                                             <div class="tpl-table-black-operation">
-                                                <a href="<?= check_url('setting.express/edit',$uid,
+                                                <a href="<?= check_url('setting.bank/edit',$uid,
                                                     ['id' => $item['id']]) ?>">
                                                     <i class="am-icon-pencil"></i> 编辑
                                                 </a>
                                                 <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                                   data-id="<?= $item['id'] ?> <?= check_url('setting.express/delete',$uid) ?>">
+                                                   data-id="<?= $item['id'] ?> <?= check_url('setting.bank/delete',$uid) ?>">
                                                     <i class="am-icon-trash"></i> 删除
                                                 </a>
                                             </div>
@@ -61,12 +61,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="am-u-lg-12 am-cf">
-                        <div class="am-fr"><?= $list->render() ?> </div>
-                        <div class="am-fr pagination-total am-margin-right">
-                            <div class="am-vertical-align-middle">总记录：<?= $list->total() ?></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -76,8 +70,8 @@
     $(function () {
 
         // 删除元素
-        var url = "<?= url('setting.delivery/delete') ?>";
-        $('.item-delete').delete('delivery_id', url);
+        var url = "<?= url('setting.bank/delete') ?>";
+        $('.item-delete').delete('id', url);
 
     });
 </script>

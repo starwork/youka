@@ -9,7 +9,7 @@
 namespace app\api\controller;
 
 
-class Verfiy
+class Verfiy extends Controller
 {
 
 }

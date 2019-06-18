@@ -35,7 +35,40 @@
                         linkUrl: ''
                     }
                 ]
-            }
+            },
+            navBar: {
+                name: "导航组",
+                type: "navBar",
+                style: {
+                    background: "#ffffff",
+                    rowsNum: "4"
+                },
+                data: [{
+                    imgUrl: "https:\/\/demo.yiovo.com\/assets\/store\/img\/diy\/navbar\/01.png",
+                    imgName: "icon-1.png",
+                    linkUrl: "",
+                    text: "按钮文字1",
+                    color: "#666666"
+                }, {
+                    imgUrl: "https:\/\/demo.yiovo.com\/assets\/store\/img\/diy\/navbar\/01.png",
+                    imgName: "icon-1.png",
+                    linkUrl: "",
+                    text: "按钮文字1",
+                    color: "#666666"
+                }, {
+                    imgUrl: "https:\/\/demo.yiovo.com\/assets\/store\/img\/diy\/navbar\/01.png",
+                    imgName: "icon-1.png",
+                    linkUrl: "",
+                    text: "按钮文字1",
+                    color: "#666666"
+                }, {
+                    imgUrl: "https:\/\/demo.yiovo.com\/assets\/store\/img\/diy\/navbar\/01.png",
+                    imgName: "icon-1.png",
+                    linkUrl: "",
+                    text: "按钮文字1",
+                    color: "#666666"
+                }]
+            },
         }
 
         /**

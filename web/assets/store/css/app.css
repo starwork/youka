@@ -213,7 +213,7 @@ ul.tpl-dropdown-content .tpl-dropdown-menu-messages-item .menu-messages-content 
 .left-sidebar {
   display: flex;
   transition: all 0.4s ease-in-out;
-  width: 280px;
+  /*width: 280px;*/
   height: 100%;
   position: fixed;
   z-index: 10;
@@ -1815,4 +1815,133 @@ ul.am-dropdown-content>li>a {
 .x-cur-p {
   cursor: pointer;
   user-select: none;
+}
+
+ .td__order-price {
+  width: 200px;
+  display: inline-block;
+}
+
+.height-auto{
+  height: auto;
+  min-height: auto;
+}
+
+.index .title {
+  font-size: 2rem;
+  height: 3.2rem;
+  font-weight: bold;
+}
+.index .line{
+  margin-top: 0.8rem;
+  width: 3.2rem;
+  height: 0.2rem;
+  background: #00BD71;
+}
+.index .total{
+  font-size: 4.2rem;
+  color: #00BD71;
+}
+.index .total span{
+  font-size: 24px;
+}
+.index .floor1 > div > div{
+  position: relative;
+}
+.index .floor1 img{
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+.index .item-header{
+  margin-top: 3.2rem;
+  font-size: 1.8rem;
+  color: #666;
+  text-align: center;
+}
+.index .item-body{
+  font-size: 4.2rem;
+  text-align: center;
+}
+.index .table-header{
+  margin-top: 3.2rem;
+  font-size: 1.8rem;
+  color: #666;
+}
+.index .table-body{
+  font-size: 1.8rem;
+}
+.index .table-body tr td{
+  height: 6rem;
+  line-height: 6rem;
+}
+.index .tab .tab-item-l{
+  height: 6rem;
+  line-height: 6rem;
+  border-bottom: solid 0.1rem #eee;
+}
+.index .tab .tab-item-l{
+  float: left;
+  padding: 0 2rem ;
+  cursor: pointer;
+  user-select: none;
+}
+.index .tab .tab-item-l .line{
+  display: none;
+}
+.index .tab .tab-item-l.active{
+  color: #00BD71;
+  cursor: pointer;
+  user-select: none;
+}
+.index .tab .tab-item-l.active .line{
+  display: block;
+  margin: 0 auto;
+}
+
+.clear{
+  clear: both;
+}
+.index .tab .tab-r{
+  text-align: right;
+}
+.index .tab .tab-r select{
+  width: 8rem;
+}
+.index .tab-left{
+  width: 200px;
+}
+.index .tab-right{
+  position: absolute;
+  left: 200px;
+  right: 0;
+  top: 0;
+}
+.index .tab-body{
+  position: relative;
+}
+.index .tab-body .item{
+  margin-top: 6rem;
+  text-align: center;
+}
+.index .tab-body .item p{
+  margin: 0;
+  font-size: 1.8rem;
+  color: #666;
+}
+.index .tab-body .item p.num{
+  color: #333;
+  font-size: 4.2rem;
+}
+.index .tab-body .item p span{
+  color: #00BD71;
+}
+.disabled{
+  display: none;
+}
+.charts .title{
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin-left: 20px;
+  color: #666;
 }

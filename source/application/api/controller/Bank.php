@@ -30,6 +30,30 @@ class Bank extends Controller
         $this->model = new BankCardModel();
     }
 
+    public function bankInfo($card)
+    {
+        $url = 'https://ccdcapi.alipay.com/validateAndCacheCardInfo.json?_input_charset=utf-8&cardNo='.$card.'&cardBinCheck=true';
+        $data = json_decode(curl($url),true);
+        if(isset($data['validated']) && $data['validated']){
+            $bank_code = $data['bank'];
+            $type = $data['cardType'];
+            $type_arr = [
+                'DC'  => '储蓄卡',
+                'CC' =>  '信用卡',
+                'SCC' => '准贷记卡',
+                'PC' =>  '预付费卡'
+            ];
+            if($bank = (new \app\api\model\Bank())->where('code',$bank_code)->find()){
+                $bank['cardType'] = $type_arr[$type];
+                return $this->renderSuccess($bank->toArray());
+            }
+            return $this->renderError('暂不支持该银行卡');
+        }else{
+            return $this->renderError('卡号不正确');
+        }
+        return json_decode($data);
+    }
+
     /**
      * 收货地址列表
      * @return array
@@ -67,7 +91,7 @@ class Bank extends Controller
      */
     public function detail($id)
     {
-        $detail = $this->model->detail($this->user['user_id'],$id);
+        $detail = $this->model->detail($this->user,$id);
         return $this->renderSuccess(compact('detail'));
     }
 
@@ -78,9 +102,10 @@ class Bank extends Controller
      * @throws \app\common\exception\BaseException
      * @throws \think\exception\DbException
      */
-    public function edit($id)
+    public function edit()
     {
-        $model = $this->model->detail($this->user['user_id'],$id);
+        $id = $this->request->post('id',0);
+        $model = $this->model->detail($this->user,$id);
         if ($model->edit($this->request->post())) {
             return $this->renderSuccess([], '更新成功');
         }
@@ -96,7 +121,10 @@ class Bank extends Controller
      */
     public function delete($id)
     {
-        $model = $this->model->detail($this->user['user_id'],$id);
+        $model = $this->model->detail($this->user,$id);
+        if(!$model){
+            return $this->renderSuccess([], '删除成功');
+        }
         if ($model->remove($this->user)) {
             return $this->renderSuccess([], '删除成功');
         }

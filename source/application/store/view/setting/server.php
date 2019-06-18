@@ -7,7 +7,7 @@
                     <div class="widget-body">
                         <fieldset>
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">隐私协议</div>
+                                <div class="widget-title am-fl">服务协议</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
@@ -15,7 +15,7 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <!-- 加载编辑器的容器 -->
-                                    <textarea id="container" name="content" type="text/plain"></textarea>
+                                    <textarea id="container" name="server[content]" type="text/plain"><?= $values['content'] ?></textarea>
                                 </div>
                             </div>
                             <div class="am-form-group">

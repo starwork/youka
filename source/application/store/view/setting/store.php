@@ -17,6 +17,55 @@
                                            value="<?= isset($values['name']) ? $values['name'] : '' ?>" required>
                                 </div>
                             </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label form-require">首页分类1 </label>
+                                <div class="am-u-sm-9">
+                                    <select name="store[category][0]" required
+                                            data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder:'请选择商品分类'}">
+                                        <option value=""></option>
+                                        <?php if (isset($catgory)): foreach ($catgory as $first): ?>
+                                            <option value="<?= $first['category_id'] ?>"
+                                                <?= $values['category'][0] == $first['category_id'] ? 'selected' : '' ?>>
+                                                <?= $first['name'] ?></option>
+                                            <?php if (isset($first['child'])): foreach ($first['child'] as $two): ?>
+                                                <option value="<?= $two['category_id'] ?>"
+                                                    <?= $values['category'][0] == $two['category_id'] ? 'selected' : '' ?>>
+                                                    　　<?= $two['name'] ?></option>
+                                                <?php if (isset($two['child'])): foreach ($two['child'] as $three): ?>
+                                                    <option value="<?= $three['category_id'] ?>"
+                                                        <?= $values['category'][0] == $three['category_id'] ? 'selected' : '' ?>>
+                                                        　　　<?= $three['name'] ?></option>
+                                                <?php endforeach; endif; ?>
+                                            <?php endforeach; endif; ?>
+                                        <?php endforeach; endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label form-require">首页分类2 </label>
+                                <div class="am-u-sm-9">
+                                    <select name="store[category][1]" required
+                                            data-am-selected="{searchBox: 1, btnSize: 'sm',  placeholder:'请选择商品分类'}">
+                                        <option value=""></option>
+                                        <?php if (isset($catgory)): foreach ($catgory as $first): ?>
+                                            <option value="<?= $first['category_id'] ?>"
+                                                <?= $values['category'][1] == $first['category_id'] ? 'selected' : '' ?>>
+                                                <?= $first['name'] ?></option>
+                                            <?php if (isset($first['child'])): foreach ($first['child'] as $two): ?>
+                                                <option value="<?= $two['category_id'] ?>"
+                                                    <?= $values['category'][1] == $two['category_id'] ? 'selected' : '' ?>>
+                                                    　　<?= $two['name'] ?></option>
+                                                <?php if (isset($two['child'])): foreach ($two['child'] as $three): ?>
+                                                    <option value="<?= $three['category_id'] ?>"
+                                                        <?= $values['category'][1] == $three['category_id'] ? 'selected' : '' ?>>
+                                                        　　　<?= $three['name'] ?></option>
+                                                <?php endforeach; endif; ?>
+                                            <?php endforeach; endif; ?>
+                                        <?php endforeach; endif; ?>
+                                    </select>
+                                </div>
+                            </div>
 <!--                            <div class="am-form-group">-->
 <!--                                <label class="am-u-sm-3 am-form-label">-->
 <!--                                    是否显示首页公告-->
@@ -77,9 +126,27 @@
         </div>
     </div>
 </div>
+
+<!-- 图片文件列表模板 -->
+<script id="tpl-file-item" type="text/template">
+    {{ each list }}
+    <div class="file-item">
+        <img src="{{ $value.file_path }}">
+        <input type="hidden" name="{{ name }}" value="{{ $value.file_path }}">
+        <i class="iconfont icon-shanchu file-item-delete"></i>
+    </div>
+    {{ /each }}
+</script>
+
+<!-- 文件库弹窗 -->
+{{include file="layouts/_template/file_library" /}}
+
 <script>
     $(function () {
-
+        // 选择图片
+        $('.upload-file').selectImages({
+            name: 'store[banner]'
+        });
         /**
          * 表单验证提交
          * @type {*}

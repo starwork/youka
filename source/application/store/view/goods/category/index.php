@@ -43,7 +43,7 @@
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $first['category_id'] ?> " style="display:  <?= check_url('goods.category/delete',$uid) ? 'inline-block' : 'none'?>">;"
+                                               data-id="<?= $first['category_id'] ?> " style="display:  <?= check_url('goods.category/delete',$uid) ? 'inline-block' : 'none'?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>

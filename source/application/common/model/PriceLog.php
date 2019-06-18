@@ -15,7 +15,7 @@ class PriceLog extends BaseModel
 {
     protected $name = 'price_log';
 
-    protected $update_time = false;
+    protected $updateTime = false;
 
     public function user()
     {
@@ -27,9 +27,9 @@ class PriceLog extends BaseModel
         return $this->belongsTo('Order');
     }
 
-    public function getList($filer)
+    public function getList($filer,$order = [])
     {
-        return $this->with('user')->where($filer)->order('id','desc')->paginate(15,false,[
+        return $this->with('user')->where($filer)->order('create_time','desc')->paginate(15,false,[
             'query' => Request::instance()->request()
         ]);
     }

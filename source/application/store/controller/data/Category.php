@@ -9,7 +9,15 @@
 namespace app\store\controller\data;
 
 
-class Category
-{
+use app\store\controller\Controller;
+use app\store\model\Category as CategoryModel;
 
+class Category extends Controller
+{
+    public function index()
+    {
+        $model = new CategoryModel;
+        $list = $model->getCacheTree();
+        return $this->fetch('index', compact('list'));
+    }
 }

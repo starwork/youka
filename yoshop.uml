@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>9c5febd3-0007-4cbb-a4b5-aed1d80548a7.SCHEMA:yoshop</OriginalElement>
+  <nodes>
+    <node x="1303.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_menus</node>
+    <node x="517.0" y="1788.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_dictionary</node>
+    <node x="0.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_express</node>
+    <node x="1068.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_comment</node>
+    <node x="927.0" y="1788.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_store_group_access</node>
+    <node x="1279.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_order_address</node>
+    <node x="1197.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_order_price_log</node>
+    <node x="1214.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_third_party_user</node>
+    <node x="1571.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_delivery</node>
+    <node x="0.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_upload_group</node>
+    <node x="568.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_region</node>
+    <node x="898.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_goods</node>
+    <node x="0.0" y="1788.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_setting</node>
+    <node x="211.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_price_log</node>
+    <node x="835.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_goods_spec_rel</node>
+    <node x="1573.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_user_address</node>
+    <node x="0.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_store_rules</node>
+    <node x="1648.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_store_log</node>
+    <node x="0.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_upload_file</node>
+    <node x="953.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_store_group</node>
+    <node x="1085.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_message</node>
+    <node x="536.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_wxapp_navbar</node>
+    <node x="417.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_spec_value</node>
+    <node x="314.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_order_goods</node>
+    <node x="268.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_wxapp_help</node>
+    <node x="722.0" y="1788.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_collect</node>
+    <node x="1413.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_sms_logs</node>
+    <node x="1109.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_store_user</node>
+    <node x="244.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_delivery_rule</node>
+    <node x="1380.0" y="1335.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_wxapp_page</node>
+    <node x="817.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_category</node>
+    <node x="262.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_goods_spec</node>
+    <node x="268.0" y="1788.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_spec</node>
+    <node x="1498.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_wxapp</node>
+    <node x="0.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_order</node>
+    <node x="564.0" y="1005.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_bank_card</node>
+    <node x="822.0" y="629.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_pay_bank</node>
+    <node x="630.0" y="0.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_user</node>
+    <node x="691.0" y="1573.0">9c5febd3-0007-4cbb-a4b5-aed1d80548a7.TABLE:yoshop.yoshop_goods_image</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="908.5000000000001" y="967.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Key columns</Category>
+  </Categories>
+</Diagram>
+

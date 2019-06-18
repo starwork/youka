@@ -13,6 +13,12 @@ class BankCard extends BaseModel
 {
     protected $name = 'bank_card';
 
+
+    public function file()
+    {
+        return $this->belongsTo('UploadFile','bank_icon');
+    }
+
     public function getList($uid = 0)
     {
         $filder = [];
@@ -20,7 +26,7 @@ class BankCard extends BaseModel
         $filter = [];
         $uid > 0 && $filter['user_id'] = $uid;
 
-        $list = $this->where($filder)->order('id')->select();
+        $list = $this->with('file')->where($filter)->order('id')->select();
         return $list;
     }
 }

@@ -12,7 +12,8 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>用户</th>
+                                <th>用户昵称</th>
+                                <th>用户头像</th>
                                 <th>金额</th>
                                 <th>订单</th>
                                 <th>描述</th>
@@ -23,7 +24,13 @@
                             <?php if (!$list->isEmpty()): foreach ($list as $item): ?>
                                 <tr>
                                     <td class="am-text-middle"><?= $item['id'] ?></td>
-                                    <td class="am-text-middle"><?= $item['user']['phone'] ?></td>
+
+                                    <td class="am-text-middle"><?= $item['user']['nickName'] ?></td>
+                                    <td class="am-text-middle">
+                                        <a href="<?= $item['user']['avatarUrl'] ?>" title="点击查看大图" target="_blank">
+                                            <img src="<?= $item['user']['avatarUrl'] ?>" width="72" height="72" alt="">
+                                        </a>
+                                    </td>
                                     <td class="am-text-middle"><?= $item['price'] ?></td>
                                     <td class="am-text-middle"><?= $item['order']['order_no'] ?></td>
                                     <td class="am-text-middle"><?= $item['text'] ?: '--' ?></td>

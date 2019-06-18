@@ -9,7 +9,9 @@
 namespace app\common\model;
 
 
-class Tags
+class Tags extends BaseModel
 {
+    protected $name = 'tags';
+    protected $updateTime = false;
 
 }

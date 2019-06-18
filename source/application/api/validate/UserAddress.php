@@ -9,7 +9,9 @@
 namespace app\api\validate;
 
 
-class UserAddress
+use think\Validate;
+
+class UserAddress extends Validate
 {
 
 }

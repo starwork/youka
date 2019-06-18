@@ -34,9 +34,9 @@ class Order
                 $config = Setting::getItem('trade');
                 // 未支付订单自动关闭
                 $this->close($config['order']['close_days']);
+                Db::commit();
                 // 已发货订单自动确认收货
                 $this->receive($config['order']['receive_days']);
-                Db::commit();
             } catch (\Exception $e) {
                 Db::rollback();
                 return false;
@@ -109,11 +109,15 @@ class Order
         ]);
         // 直接更新
         if (!empty($orderIds)) {
-            return $this->model->isUpdate(true)->save([
-                'receipt_status' => 20,
-                'receipt_time' => time(),
-                'order_status' => 30
-            ], ['order_id' => ['in', $orderIds]]);
+            foreach ($orderIds as $order_id){
+                $order = \app\api\model\Order::get($order_id);
+                $order->receipt();
+            }
+//            return $this->model->isUpdate(true)->save([
+//                'receipt_status' => 20,
+//                'receipt_time' => time(),
+//                'order_status' => 30
+//            ], ['order_id' => ['in', $orderIds]]);
         }
         return false;
     }

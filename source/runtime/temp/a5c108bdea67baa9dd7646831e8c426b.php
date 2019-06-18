@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:85:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\user\index.php";i:1557821677;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557993091;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:85:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\user\index.php";i:1560502981;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -121,6 +121,60 @@
                     <div class="widget-title am-cf">用户列表</div>
                 </div>
                 <div class="widget-body am-fr">
+                <form class="toolbar-form page_toolbar" action="" id="form-search">
+                    <input type="hidden" name="s" value="/store/user/index">
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <a class="j-export am-btn am-btn-success am-radius"
+                                       href="javascript:void(0);" style="display: <?= check_auth('user/export', $uid) ? 'inline-block':'none' ?>;">
+                                        <i class="iconfont icon-daochu am-margin-right-xs"></i>用户导出
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-9">
+                        <div class="am fr">
+                            <div class="am-form-group am-fl">
+
+                            </div>
+
+                            <div class="am-form-group am-fl">
+                                <select name="level"
+                                        data-am-selected="{btnSize: 'sm', placeholder: '等级'}">
+                                    <option value=""></option>
+                                    <option value="0" <?= $level == 0 ?  'selected' : ''?>
+                                    >全部
+                                    </option>
+                                    <option value="10" <?= $level == 10 ?  'selected' : ''?>
+                                    >分销商
+                                    </option>
+                                    <option value="20" <?= $level == 20 ?  'selected' : ''?>
+                                    >经销商
+                                    </option>
+                                    <option value="30" <?= $level == 20 ?  'selected' : ''?>
+                                    >市级代理
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="am-form-group am-fl">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form">
+                                    <input type="text" class="am-form-field" name="nickName"
+                                           placeholder="请输入用户昵称"
+                                           value="<?=$nickName  ?>">
+                                    <div class="am-input-group-btn">
+                                        <button class="am-btn am-btn-default am-icon-search"
+                                                type="submit"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+                <div class="widget-body am-fr">
                     <div class="am-scrollable-horizontal am-u-sm-12">
                         <table width="100%" class="am-table am-table-compact am-table-striped
                          tpl-table-black am-text-nowrap">
@@ -131,12 +185,13 @@
                                 <th>头像</th>
                                 <th>昵称</th>
                                 <th>用户余额</th>
-                                <th>用户积分</th>
+                                <th>用户咖豆</th>
                                 <th>性别</th>
                                 <th>级别</th>
-                                <th>国家</th>
-                                <th>省份</th>
-                                <th>城市</th>
+                                <th>上级</th>
+                                <th>上上级</th>
+                                <th>直属下级数</th>
+                                <th>团队人数数</th>
                                 <th>注册时间</th>
                                 <th>操作</th>
                             </tr>
@@ -163,9 +218,14 @@
                                             <?= $item['level']['level_name'] ?>
                                         </span>
                                     </td>
-                                    <td class="am-text-middle"><?= $item['country'] ?: '--' ?></td>
-                                    <td class="am-text-middle"><?= $item['province'] ?: '--' ?></td>
-                                    <td class="am-text-middle"><?= $item['city'] ?: '--' ?></td>
+                                    <td class="am-text-middle">
+                                        <a href="<?=url('user/index','pid='.$item['parent']['user_id']) ?>"><?=$item['parent']['nickName'] ?></a>
+                                    </td>
+                                    <td class="am-text-middle">
+                                        <a href="<?=url('user/index','ppid='.$item['pparent']['user_id']) ?>"><?=$item['pparent']['nickName'] ?></a>
+                                    </td>
+                                    <td class="am-text-middle"><?= $item['child_total'] ?></td>
+                                    <td class="am-text-middle"><?= $item['trem_count'] ?></td>
                                     <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
@@ -176,11 +236,11 @@
 <!--                                                <i class="iconfont icon-qiandai" style="font-size: 12px;"></i>-->
 <!--                                                充值-->
 <!--                                            </a>-->
-                                            <a class="j-delete tpl-table-black-operation-default"
+                                            <!--<a class="j-delete tpl-table-black-operation-default"
                                                href="javascript:void(0);" style="display: <?=check_auth('user/delete',$uid) ? 'inline-block' : 'none'?>;"
                                                data-id="11635" title="删除">
                                                 <i class="am-icon-trash"></i> 删除
-                                            </a>
+                                            </a>-->
                                             <div class="j-opSelect operation-select am-dropdown" style="display: <?=check_auth('order/index,user.price_log/index',$uid) ? 'inline-block' : 'none'?>;">
                                                 <button type="button"
                                                         class="am-dropdown-toggle am-btn am-btn-sm am-btn-secondary">
@@ -333,6 +393,8 @@
 <script src="/assets//store/js/art-template.js"></script>
 <script src="/assets//store/js/app.js"></script>
 <script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

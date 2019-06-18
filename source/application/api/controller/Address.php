@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\api\model\UserAddress;
+use app\common\model\Region;
 
 /**
  * 收货地址管理
@@ -55,7 +56,8 @@ class Address extends Controller
         $user = $this->getUser();
         $detail = UserAddress::detail($user['user_id'],$address_id);
         $region = array_values($detail['region']);
-        return $this->renderSuccess(compact('detail', 'region'));
+        $is_default = $address_id == $user['address_id'] ? 1 : 0;
+        return $this->renderSuccess(compact('detail', 'region','is_default'));
     }
 
     /**
@@ -65,10 +67,11 @@ class Address extends Controller
      * @throws \app\common\exception\BaseException
      * @throws \think\exception\DbException
      */
-    public function edit($address_id)
+    public function edit()
     {
+        $address_id = $this->request->post('address_id');
         $user = $this->getUser();
-        $model = UserAddress::detail($user['user_id'], $address_id);
+        $model = UserAddress::detail($user['user_id'], $address_id,0);
         if ($model->edit($this->request->post())) {
             return $this->renderSuccess([], '更新成功');
         }
@@ -82,7 +85,8 @@ class Address extends Controller
      * @throws \app\common\exception\BaseException
      * @throws \think\exception\DbException
      */
-    public function setDefault($address_id) {
+    public function setDefault() {
+        $address_id = $this->request->post('address_id',0);
         $user = $this->getUser();
         $model = UserAddress::detail($user['user_id'], $address_id);
         if ($model->setDefault($user)) {
@@ -106,6 +110,12 @@ class Address extends Controller
             return $this->renderSuccess([], '删除成功');
         }
         return $this->renderError('删除失败');
+    }
+
+    public function area($level = 1,$pid = 0)
+    {
+        $model = new Region();
+        return $model->where('level',$level)->where('pid',$pid)->select();
     }
 
 }

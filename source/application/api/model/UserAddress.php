@@ -53,7 +53,11 @@ class UserAddress extends UserAddressModel
             'region_id' => $region_id,
         ], $data));
         // 设为默认收货地址
-        !$user['address_id'] && $user->save(['address_id' => $this->getLastInsID()]);
+        if($data['is_default']){
+            $user->allowField(true)->save(['address_id' => $this->getLastInsID()]);
+        }else{
+            !$user['address_id'] && $user->allowField(true)->save(['address_id' => $this->getLastInsID()]);
+        }
         return true;
     }
 
@@ -69,8 +73,13 @@ class UserAddress extends UserAddressModel
         $province_id = Region::getIdByName($region[0], 1);
         $city_id = Region::getIdByName($region[1], 2, $province_id);
         $region_id = Region::getIdByName($region[2], 3, $city_id);
-        return $this->allowField(true)
+        $this->allowField(true)
             ->save(array_merge(compact('province_id', 'city_id', 'region_id'), $data));
+        if($data['is_default']){
+            $user = User::get($this['user_id']);
+            $user->allowField(true)->save(['address_id' => $this['address_id']]);
+        }
+        return true;
     }
 
     /**
@@ -92,7 +101,7 @@ class UserAddress extends UserAddressModel
     public function remove($user)
     {
         // 查询当前是否为默认地址
-        $user['address_id'] == $this['address_id'] && $user->save(['address_id' => 0]);
+        $user['address_id'] == $this['address_id'] && $user->allowField(true)->save(['address_id' => 0]);
         return $this->delete();
     }
 

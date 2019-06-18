@@ -23,7 +23,7 @@
                                  class="form-tab-group <?= $values['default'] === 'wechat' ? 'active' : 'active' ?>">
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-form-label">
-                                        微信支付商户号 <span class="tpl-form-line-small-title"><span class="tpl-form-line-small-title">APIKEY</span></span>
+                                        微信支付商户号 <span class="tpl-form-line-small-title"><span class="tpl-form-line-small-title">MCHID</span></span>
                                     </label>
                                     <div class="am-u-sm-9">
                                         <input type="text" class="tpl-form-input" name="payment[engine][wechat][mchid]"
@@ -32,12 +32,12 @@
                                 </div>
                                 <div class="am-form-group">
                                     <label class="am-u-sm-3 am-form-label">
-                                        微信支付密钥 <span class="tpl-form-line-small-title">APIKEY</span>
+                                        微信支付密钥 <span class="tpl-form-line-small-title">APIID</span>
                                     </label>
                                     <div class="am-u-sm-9">
                                         <input type="text" class="tpl-form-input"
-                                               name="payment[engine][wechat][apikey]"
-                                               value="<?= $values['engine']['wechat']['apikey'] ?>">
+                                               name="payment[engine][wechat][app_id]"
+                                               value="<?= $values['engine']['wechat']['app_id'] ?>">
                                     </div>
                                 </div>
 

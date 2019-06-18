@@ -29,13 +29,14 @@ class Aliyun extends Server
      * @param $templateParams
      * @return bool|\stdClass
      */
-    public function sendSms($msgType, $templateParams)
+    public function sendSms($phone,$msgType, $templateParams)
     {
         $params = [];
         // *** 需用户填写部分 ***
 
         // 必填: 短信接收号码
-        $params["PhoneNumbers"] = $this->config[$msgType]['accept_phone'];
+        //$params["PhoneNumbers"] = $this->config[$msgType]['accept_phone'];
+        $params["PhoneNumbers"] = $phone;
 
         // 必填: 短信签名，应严格按"签名名称"填写，请参考: https://dysms.console.aliyun.com/dysms.htm#/develop/sign
         $params["SignName"] = $this->config['sign'];

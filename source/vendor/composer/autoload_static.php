@@ -7,8 +7,15 @@ namespace Composer\Autoload;
 class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
 {
     public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'a9ed0d27b5a698798a89181429f162c5' => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib/Common/customFunctions.php',
+        'f0e7e63bbb278a92db02393536748c5f' => __DIR__ . '/..' . '/overtrue/wechat/src/Kernel/Support/Helpers.php',
+        '6747f579ad6817f318cc3a7e7a0abb93' => __DIR__ . '/..' . '/overtrue/wechat/src/Kernel/Helpers.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
     );
@@ -30,27 +37,51 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Contracts\\' => 18,
+            'Symfony\\Component\\VarExporter\\' => 30,
             'Symfony\\Component\\PropertyAccess\\' => 33,
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\Inflector\\' => 28,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\Cache\\' => 24,
+            'Symfony\\Bridge\\PsrHttpMessage\\' => 30,
         ),
         'Q' => 
         array (
             'Qiniu\\' => 6,
         ),
+        'P' => 
+        array (
+            'Psr\\SimpleCache\\' => 16,
+            'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Container\\' => 14,
+            'Psr\\Cache\\' => 10,
+        ),
         'O' => 
         array (
+            'Overtrue\\Socialite\\' => 19,
             'OSS\\' => 4,
         ),
         'M' => 
         array (
             'MyCLabs\\Enum\\' => 13,
+            'Monolog\\' => 8,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
         ),
         'E' => 
         array (
             'Endroid\\QrCode\\' => 15,
             'Endroid\\Installer\\' => 18,
+            'EasyWeChat\\' => 11,
+            'EasyWeChatComposer\\' => 19,
         ),
         'D' => 
         array (
@@ -83,9 +114,21 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         array (
             0 => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib',
         ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/contracts',
+        ),
+        'Symfony\\Component\\VarExporter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/var-exporter',
         ),
         'Symfony\\Component\\PropertyAccess\\' => 
         array (
@@ -99,9 +142,45 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         array (
             0 => __DIR__ . '/..' . '/symfony/inflector',
         ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
+        ),
+        'Symfony\\Component\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'Symfony\\Bridge\\PsrHttpMessage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/psr-http-message-bridge',
+        ),
         'Qiniu\\' => 
         array (
             0 => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu',
+        ),
+        'Psr\\SimpleCache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/simple-cache/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
+        ),
+        'Overtrue\\Socialite\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/socialite/src',
         ),
         'OSS\\' => 
         array (
@@ -111,6 +190,22 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         array (
             0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
+        'Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
         'Endroid\\QrCode\\' => 
         array (
             0 => __DIR__ . '/..' . '/endroid/qr-code/src',
@@ -118,6 +213,14 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         'Endroid\\Installer\\' => 
         array (
             0 => __DIR__ . '/..' . '/endroid/installer/src',
+        ),
+        'EasyWeChat\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/wechat/src',
+        ),
+        'EasyWeChatComposer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/easywechat-composer/easywechat-composer/src',
         ),
         'DASPRiD\\Enum\\' => 
         array (
@@ -129,11 +232,22 @@ class ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Pimple' => 
+            array (
+                0 => __DIR__ . '/..' . '/pimple/pimple/src',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit34a41e2841af1a67f3ddef099fc7b348::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

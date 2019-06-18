@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:91:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\store\user\index.php";i:1558076588;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557993091;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:91:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\store\user\index.php";i:1558076588;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -210,6 +210,8 @@
 <script src="/assets//store/js/art-template.js"></script>
 <script src="/assets//store/js/app.js"></script>
 <script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

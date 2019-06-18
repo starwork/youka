@@ -8,8 +8,9 @@
 
 namespace app\api\model;
 
+use app\common\model\Banner as BannerModel;
 
-class Banner
+class Banner extends BannerModel
 {
 
 }

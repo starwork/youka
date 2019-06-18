@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:87:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\order\detail.php";i:1557459727;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557881619;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:87:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\order\detail.php";i:1558421458;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,10 +11,10 @@
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="icon" type="image/png" href="assets/store/i/favicon.ico"/>
     <meta name="apple-mobile-web-app-title" content="<?= $setting['store']['values']['name'] ?>"/>
-    <link rel="stylesheet" href="assets/store/css/amazeui.min.css"/>
-    <link rel="stylesheet" href="assets/store/css/app.css"/>
+    <link rel="stylesheet" href="/assets//store/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets//store/css/app.css"/>
     <link rel="stylesheet" href="//at.alicdn.com/t/font_783249_fc0v7ysdt1k.css">
-    <script src="assets/store/js/jquery.min.js"></script>
+    <script src="/assets//store/js/jquery.min.js"></script>
     <script src="//at.alicdn.com/t/font_783249_e5yrsf08rap.js"></script>
     <script>
         BASE_URL = '<?= isset($base_url) ? $base_url : '' ?>';
@@ -176,15 +176,31 @@
                             <tbody>
                             <tr>
                                 <th>订单号</th>
-                                <th>实付款</th>
+                                <th>订单金额</th>
                                 <th>买家</th>
                                 <th>交易状态</th>
                             </tr>
                             <tr>
                                 <td><?= $detail['order_no'] ?></td>
                                 <td>
-                                    <p>￥<?= $detail['pay_price'] ?></p>
-                                    <p class="am-link-muted">(含运费：￥<?= $detail['express_price'] ?>)</p>
+                                    <div class="td__order-price am-text-left">
+                                        <ul class="am-avg-sm-2">
+                                            <li class="am-text-right">订单总额：</li>
+                                            <li class="am-text-right">￥ <?= $detail['total_price'] ?></li>
+                                        </ul>
+                                        <ul class="am-avg-sm-2">
+                                            <li class="am-text-right">运费金额：</li>
+                                            <li class="am-text-right">+￥ <?= $detail['express_price'] ?></li>
+                                        </ul>
+                                        <ul class="am-avg-sm-2">
+                                            <li class="am-text-right">后台改价：</li>
+                                            <li class="am-text-right">-                                                    ￥8998.00</li>
+                                        </ul>
+                                        <ul class="am-avg-sm-2">
+                                            <li class="am-text-right">实付款金额：</li>
+                                            <li class="x-color-red am-text-right">
+                                                ￥<?= $detail['pay_price'] ?></li>
+                                        </ul>
                                 </td>
                                 <td>
                                     <p><?= $detail['user']['nickName'] ?></p>
@@ -248,7 +264,10 @@
                                 </tr>
                             <?php endforeach; ?>
                             <tr>
-                                <td colspan="6" class="am-text-right">总计金额：￥<?= $detail['total_price'] ?></td>
+                                <td colspan="6" class="am-text-right">
+                                    <span class="am-fl">买家留言：<?= $detail['remark'] ? $detail['remark'] : '无' ?></span>
+                                    <span class="am-fr">总计金额：￥<?= $detail['total_price'] ?></span>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -398,13 +417,15 @@
     <!-- 内容区域 end -->
 
 </div>
-<script src="assets/layer/layer.js"></script>
-<script src="assets/store/js/jquery.form.min.js"></script>
-<script src="assets/store/js/amazeui.min.js"></script>
-<script src="assets/store/js/webuploader.html5only.js"></script>
-<script src="assets/store/js/art-template.js"></script>
-<script src="assets/store/js/app.js"></script>
-<script src="assets/store/js/file.library.js"></script>
+<script src="/assets//layer/layer.js"></script>
+<script src="/assets//store/js/jquery.form.min.js"></script>
+<script src="/assets//store/js/amazeui.min.js"></script>
+<script src="/assets//store/js/webuploader.html5only.js"></script>
+<script src="/assets//store/js/art-template.js"></script>
+<script src="/assets//store/js/app.js"></script>
+<script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

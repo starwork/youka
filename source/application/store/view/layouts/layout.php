@@ -128,6 +128,8 @@
 <script src="__ASSETS__/store/js/art-template.js"></script>
 <script src="__ASSETS__/store/js/app.js"></script>
 <script src="__ASSETS__/store/js/file.library.js"></script>
+<script src="__ASSETS__/store/js/select.data.js"></script>
+
 </body>
 
 </html>

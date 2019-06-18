@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:89:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\setting\retail.php";i:1557732744;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557993091;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:89:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\setting\retail.php";i:1560475610;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -124,44 +124,54 @@
                                 <div class="widget-title am-fl">分销设置</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">复购折扣 </label>
+                                <label class="am-u-sm-3 am-form-label">复购折扣 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[many_buy]"
-                                               value="<?= $values['many_buy'] ?>"  required>
+                                               value="<?= $values['many_buy'] ?>" >
                                     </div>
                                     <small>范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">首次直推开发奖 </label>
+                                <label class="am-u-sm-3 am-form-label">复购优惠描述 </label>
+                                <div class="am-u-sm-9">
+                                    <div class="am-u-sm-7">
+                                        <input type="text" class="am-form-field" name="retail[many_msg]"
+                                               value="<?= $values['many_msg'] ?>" >
+                                    </div>
+                                    <small></small>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">首次直推开发奖 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[first_money]"
-                                               value="<?= $values['first_money'] ?>"  required>
+                                               value="<?= $values['first_money'] ?>" >
                                     </div>
-                                    <small>佣金比例范围 0% - 100%</small>
+                                    <small>固定金额，单位元</small>
                                 </div>
                             </div>
                             <div class="widget-head am-cf">
                                 <div class="widget-title am-fl">分销商设置</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">一级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">一级佣金比例 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[10][first_money]"
-                                               value="<?= $values[10]['first_money'] ?>"  required>
+                                               value="<?= $values[10]['first_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">二级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">二级佣金比例 </label>
                                 <div class="am-u-sm-9 ">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[10][second_money]"
-                                               value="<?= $values[10]['second_money'] ?>"  required>
+                                               value="<?= $values[10]['second_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
@@ -170,41 +180,41 @@
                                 <div class="widget-title am-fl">经销商设置</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">一级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">一级佣金比例 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[20][first_money]"
-                                               value="<?= $values[20]['first_money'] ?>"  required>
+                                               value="<?= $values[20]['first_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">二级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">二级佣金比例 </label>
                                 <div class="am-u-sm-9 ">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[20][second_money]"
-                                               value="<?= $values[20]['second_money'] ?>"  required>
+                                               value="<?= $values[20]['second_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">直辖区域维护奖 </label>
+                                <label class="am-u-sm-3 am-form-label">直辖区域维护奖 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[20][maintain][diect]"
-                                               value="<?= $values[20]['maintain']['diect'] ?>"  required>
+                                               value="<?= $values[20]['maintain']['diect'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">直接育成维护奖 </label>
+                                <label class="am-u-sm-3 am-form-label">直接育成维护奖 </label>
                                 <div class="am-u-sm-9 ">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[20][maintain][indirect]"
-                                               value="<?= $values[20]['maintain']['indirect'] ?>"  required>
+                                               value="<?= $values[20]['maintain']['indirect'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
@@ -213,41 +223,41 @@
                                 <div class="widget-title am-fl">市级代理设置</div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">一级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">一级佣金比例 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[30][first_money]"
-                                               value="<?= $values[30]['first_money'] ?>"  required>
+                                               value="<?= $values[30]['first_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">二级佣金比例 </label>
+                                <label class="am-u-sm-3 am-form-label">二级佣金比例 </label>
                                 <div class="am-u-sm-9 ">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[30][second_money]"
-                                               value="<?= $values[30]['second_money'] ?>"  required>
+                                               value="<?= $values[30]['second_money'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">直辖区域维护奖 </label>
+                                <label class="am-u-sm-3 am-form-label">直辖区域维护奖 </label>
                                 <div class="am-u-sm-9">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[30][maintain][diect]"
-                                               value="<?= $values[30]['maintain']['diect'] ?>"  required>
+                                               value="<?= $values[30]['maintain']['diect'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
                             </div>
                             <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require">直接育成维护奖 </label>
+                                <label class="am-u-sm-3 am-form-label">直接育成维护奖 </label>
                                 <div class="am-u-sm-9 ">
                                     <div class="am-u-sm-7">
                                         <input type="number" class="am-form-field" name="retail[30][maintain][indirect]"
-                                               value="<?= $values[30]['maintain']['indirect'] ?>"  required>
+                                               value="<?= $values[30]['maintain']['indirect'] ?>" >
                                     </div>
                                     <small>佣金比例范围 0% - 100%</small>
                                 </div>
@@ -290,6 +300,8 @@
 <script src="/assets//store/js/art-template.js"></script>
 <script src="/assets//store/js/app.js"></script>
 <script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

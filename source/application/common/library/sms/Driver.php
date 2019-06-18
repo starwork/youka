@@ -38,13 +38,13 @@ class Driver
      * @param bool $isTest
      * @return bool
      */
-    public function sendSms($msgType, $templateParams, $isTest = false)
+    public function sendSms($phone,$msgType, $templateParams, $isTest = false)
     {
         if ($isTest === false
             && $this->config['engine'][$this->engineName][$msgType]['is_enable'] === '0') {
             return false;
         }
-        return $this->engine->sendSms($msgType, $templateParams);
+        return $this->engine->sendSms($phone,$msgType, $templateParams);
     }
 
     /**

@@ -13,6 +13,12 @@ use app\api\model\Order as OrderModel;
 
 class Comment extends CommentModel
 {
+    protected $hidden = [
+        'status',
+        'sort',
+        'is_delete',
+        'wxapp_id'
+    ];
     public function add($user,$data)
     {
         if(empty($data['order_id']) || empty($data['goods_id'])){

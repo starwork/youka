@@ -24,6 +24,9 @@ class Setting extends SettingModel
         'payment' => '支付设置',
         'wechat' => '公众号设置',
         'retail' => '分销设置',
+        'tplmsg' => '模板消息',
+        'privacy' => '隐私协议',
+        'server' => '服务协议',
     ];
 
     /**

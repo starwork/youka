@@ -1,0 +1,212 @@
+@mainColor: #00BD71;
+@mainGradientColor: linear-gradient(to right, #00BD71, #74CC98);
+@strongColor: #FA4E1B;
+@textColor: #333;
+@titleColor: #666;
+@hidenColor: #d8d8d8;
+
+.main-color {
+  color: @mainColor;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.px-1 {
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+
+.px-2 {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.px-3 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.px-4 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.py-1 {
+  padding-top: .25rem;
+  padding-bottom: .25rem;
+}
+
+.pb-1 {
+  padding-bottom: .25rem;
+}
+
+.mt-1 {
+  margin-top: .25rem;
+}
+
+.display-flex {
+  display: flex;
+}
+
+body {
+  background-color: #f6f6f6;
+}
+
+a {
+  color: @mainColor;
+}
+
+.van-nav-bar.yg-nav-bar {
+  .van-icon {
+    color: #333;
+  }
+}
+
+#app [class*=van-hairline]::after {
+  border: none;
+}
+
+#app .van-hairline--bottom::after {
+  border-bottom-width: 0;
+}
+
+.yg-main-btn {
+  background: @mainGradientColor;
+  border: none;
+}
+
+.yg-popup {
+  width: 80%;
+  padding: 0.5rem 0.25rem;
+
+  .title {
+    color: #333;
+    font-size: 18px;
+  }
+}
+
+.yg-no-data {
+  background-color: #fff;
+  padding: 0.5rem;
+
+  .img {
+    text-align: center;
+
+    img {
+      width: 60px;
+    }
+  }
+
+  .title {
+    color: #999;
+    font-size: 18px;
+  }
+
+  .no-data-btn {
+    width: 50%;
+    color: #333;
+    font-size: 12px;
+    border-radius: 50px;
+  }
+}
+
+.van-dialog {
+  .van-hairline--top.van-dialog__footer {
+    .van-button--default {
+      color: #333;
+    }
+  }
+}
+
+.yg-nav-bar {
+  .van-nav-bar__text {
+    color: @mainColor;
+  }
+}
+
+// 过渡动画
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0;
+}
+
+.child-view {
+  position: absolute;
+  transition: all .5s cubic-bezier(.55, 0, .1, 1);
+}
+
+.slide-left-enter, .slide-right-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(30px, 0);
+  transform: translate(30px, 0);
+}
+
+.slide-left-leave-active, .slide-right-enter {
+  opacity: 0;
+  -webkit-transform: translate(-30px, 0);
+  transform: translate(-30px, 0);
+}
+
+.yg-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.5);
+  z-index: 1000;
+  overflow: hidden;
+  svg {
+    transform: scale(0.1);
+  }
+}
+
+.van-tabs__line {
+  background-color: @mainColor;
+}
+
+.van-address-list__add {
+  z-index: 999;
+}
+
+.yg-pagination {
+  padding: 0.5rem 0.25rem;
+}
+
+.van-sku-row__item--active {
+  border-color: @mainColor;
+  background: @mainColor;
+}
+
+.van-sku-messages {
+  padding-bottom: 0;
+}

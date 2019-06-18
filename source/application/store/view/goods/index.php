@@ -6,7 +6,7 @@
                     <div class="widget-title am-cf">出售中的商品</div>
                 </div>
                 <div class="widget-body am-fr">
-                    <form class="toolbar-form page_toolbar" action="">
+                    <form class="toolbar-form page_toolbar" action="" id="form-search">
                         <input type="hidden" name="s" value="/store/goods/index">
                         <div class="am-u-sm-12 am-u-md-3">
                             <div class="am-form-group">
@@ -15,6 +15,10 @@
                                         <a class="am-btn am-btn-default am-btn-success am-radius"
                                            href="<?= check_url('goods/add',$uid) ?>">
                                             <span class="am-icon-plus"></span> 新增
+                                        </a>
+                                        <a class="j-export am-btn am-btn-default  am-btn-success am-radius"
+                                           href="javascript:void(0);" style="display: <?= check_auth('goods/export', $uid) ? 'inline-block':'none' ?>;">
+                                            <span class="iconfont icon-daochu " style="font-size: 12px;"></span>商品导出
                                         </a>
                                     </div>
                                 </div>
@@ -79,6 +83,7 @@
                                 <th>商品分类</th>
                                 <th>实际销量</th>
                                 <th>商品排序</th>
+                                <th>是否热销</th>
                                 <th>商品状态</th>
                                 <th>添加时间</th>
                                 <th>操作</th>
@@ -105,6 +110,10 @@
                                     <td class="am-text-middle"><?= $item['category']['name'] ?></td>
                                     <td class="am-text-middle"><?= $item['sales_actual'] ?></td>
                                     <td class="am-text-middle"><?= $item['goods_sort'] ?></td>
+                                    <td class="am-text-middle">
+
+                                        <span class="j-hot am-badge x-cur-p <?= $item['is_hot'] == 1 ? 'am-badge-success':'' ?>" data-id="<?= $item['goods_id'] ?>" data-state="<?= $item['is_hot'] ?>"><?=( $item['is_hot'] == 1) ? '是' :'否'; ?></span>
+                                    </td>
                                     <td class="am-text-middle">
                                         <span class="j-state am-badge x-cur-p
                                            <?= $item['goods_status']['value'] == 10 ? 'am-badge-success':'' ?>" data-id="<?= $item['goods_id'] ?>" data-state="<?= $item['goods_status']['value'] ?>">
@@ -169,10 +178,47 @@
                 });
 
         });
+        // 商品热销
+        $('.j-hot').click(function () {
+            // 验证权限
+            if (!<?= check_auth('goods/hot',$uid) ?>) {
+                return false;
+            }
+            var data = $(this).data();
+            layer.confirm('确定要' + (parseInt(data.state) === 1 ? '去除热销' : '设置热销') + '该商品吗？'
+                , {title: '友情提示'}
+                , function (index) {
+                    $.post("index.php?s=/store/goods/hot"
+                        , {
+                            goods_id: data.id,
+                            state: Number(!(parseInt(data.state) === 1))
+                        }
+                        , function (result) {
+                            result.code === 1 ? $.show_success(result.msg, result.url)
+                                : $.show_error(result.msg);
+                        });
+                    layer.close(index);
+                });
+
+        });
         // 删除元素
         var url = "<?= url('goods/delete') ?>";
         $('.item-delete').delete('goods_id', url);
 
+        /**
+         * 订单导出
+         */
+        $('.j-export').click(function () {
+            if(!<?=check_auth('goods/export',$uid) ?>){
+                return false;
+            }
+            var data = {};
+            var formData = $('#form-search').serializeArray();
+            $.each(formData, function () {
+                this.name !== 's' && (data[this.name] = this.value);
+            });
+            window.location = "index.php?s=/store/goods/export" + '&' + $.urlEncode(data);
+        });
     });
 </script>
 

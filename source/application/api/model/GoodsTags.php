@@ -8,8 +8,9 @@
 
 namespace app\api\model;
 
+use app\common\model\GoodsTags as GoodsTagsModel;
 
-class GoodsTags
+class GoodsTags extends GoodsTagsModel
 {
 
 }

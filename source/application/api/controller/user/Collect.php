@@ -16,9 +16,9 @@ class Collect extends Controller
 {
     protected $user;
 
-    public function __construct(Request $request = null)
+    public function _initialize()
     {
-        parent::__construct($request);
+        parent::_initialize();
         $this->user = $this->getUser();
     }
 
@@ -37,7 +37,7 @@ class Collect extends Controller
         return $this->renderSuccess($list);
     }
 
-    public function del($id)
+    public function delete($id)
     {
         $model = CollectModel::where('user_id',$this->user['user_id'])->find($id);
         if($model->remove()){
@@ -46,9 +46,14 @@ class Collect extends Controller
         return $this->renderError('删除失败');
     }
 
-    public function add($goods_id)
+    public function add()
     {
+        $goods_id = $this->request->post('goods_id');
         $model = new CollectModel();
+        $collect = $model->where('goods_id',$goods_id)->where('user_id',$this->user['user_id'])->find();
+        if($collect){
+            return $this->renderSuccess('收藏成功');
+        }
         if($model->add($this->user,['goods_id' => $goods_id])){
             return $this->renderSuccess('收藏成功');
         }

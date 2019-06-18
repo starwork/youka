@@ -3,14 +3,14 @@
         <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
             <div class="widget am-cf">
                 <div class="widget-head am-cf">
-                    <div class="widget-title am-cf">管理员列表</div>
+                    <div class="widget-title am-cf">幻灯片列表</div>
                 </div>
                 <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
                     <div class="am-form-group">
                         <div class="am-btn-toolbar">
                             <div class="am-btn-group am-btn-group-xs">
                                 <a class="am-btn am-btn-default am-btn-success am-radius"
-                                   href="<?= check_url('store.user/add',$uid) ?>">
+                                   href="<?= check_url('banner/add',$uid) ?>">
                                     <span class="am-icon-plus"></span> 新增
                                 </a>
                             </div>
@@ -23,9 +23,10 @@
                          tpl-table-black am-text-nowrap">
                             <thead>
                             <tr>
-                                <th>管理员ID</th>
-                                <th>用户名</th>
-                                <th>角色名</th>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>图片</th>
+                                <th>跳转地址</th>
                                 <th>添加时间</th>
                                 <th>操作</th>
                             </tr>
@@ -33,22 +34,27 @@
                             <tbody>
                             <?php if (!$list->isEmpty()): foreach ($list as $item): ?>
                                 <tr>
-                                    <td class="am-text-middle"><?= $item['store_user_id'] ?></td>
+                                    <td class="am-text-middle"><?= $item['id'] ?></td>
                                     <td class="am-text-middle">
-                                        <?= $item['user_name'] ?>
+                                        <?= $item['title'] ?>
                                     </td>
                                     <td class="am-text-middle">
-                                        <?= $item['group'] ? implode('|',array_column($item['group']->toArray(),'title')) : '未分配角色' ?>
+                                        <a href="<?= $item['file']['file_path'] ?>"
+                                           title="点击查看大图" target="_blank">
+                                            <img src="<?= $item['file']['file_path'] ?>"
+                                                 height="50" alt="banner图片">
+                                        </a>
                                     </td>
+                                    <td class="am-text-middle"><?= $item['url'] ?></td>
                                     <td class="am-text-middle"><?= $item['create_time'] ?></td>
                                     <td class="am-text-middle">
                                         <div class="tpl-table-black-operation">
-                                            <a href="<?= check_url('store.user/edit',$uid,
-                                                ['id' => $item['store_user_id']]) ?>">
+                                            <a href="<?= check_url('banner/edit',$uid,
+                                                ['id' => $item['id']]) ?>">
                                                 <i class="am-icon-pencil"></i> 编辑
                                             </a>
                                             <a href="javascript:;" class="item-delete tpl-table-black-operation-del"
-                                               data-id="<?= $item['store_user_id'] ?>" style="display: <?= check_auth('store.user/delete',$uid) && $item['store_user_id'] > 1 ? 'inline-block':'none' ?>">
+                                               data-id="<?= $item['id'] ?>" style="display: <?= check_auth('banner/delete',$uid) ? 'inline-block':'none' ?>">
                                                 <i class="am-icon-trash"></i> 删除
                                             </a>
                                         </div>
@@ -62,12 +68,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="am-u-lg-12 am-cf">
-                        <div class="am-fr"><?= $list->render() ?> </div>
-                        <div class="am-fr pagination-total am-margin-right">
-                            <div class="am-vertical-align-middle">总记录：<?= $list->total() ?></div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>

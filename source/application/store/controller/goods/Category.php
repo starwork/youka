@@ -23,6 +23,26 @@ class Category extends Controller
         return $this->fetch('index', compact('list'));
     }
 
+
+    public function SetIndex($category_id,$state)
+    {
+        $model = CategoryModel::get($category_id);
+        if($state){
+            $data = [
+                'index' => 1
+            ];
+        }else{
+            $data = [
+                'index' => 0
+            ];
+        }
+        if($model->save($data)){
+            return $this->renderSuccess('修改成功');
+        }else{
+            return $this->renderSuccess('修改失败');
+        }
+    }
+
     /**
      * 删除商品分类
      * @param $category_id

@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use app\common\library\Tree;
 use think\Request;
 
 /**
@@ -62,6 +63,24 @@ class Goods extends BaseModel
     }
 
     /**
+     * 关联标签表
+     * @return \think\model\relation\HasMany
+     */
+    public function tags()
+    {
+        return $this->hasMany('GoodsTags');
+    }
+
+    /**
+     * 管理广告图片
+     * @return \think\model\relation\HasMany
+     */
+    public function file()
+    {
+        return $this->belongsTo('UploadFile','file_id');
+    }
+
+    /**
      * 关联运费模板表
      * @return \think\model\relation\BelongsTo
      */
@@ -71,7 +90,7 @@ class Goods extends BaseModel
     }
 
     /**
-     * 计费方式
+     * 商品状态
      * @param $value
      * @return mixed
      */
@@ -91,6 +110,7 @@ class Goods extends BaseModel
     {
         // spec_attr
         $specAttrData = [];
+        $specAttrStr = [];
         foreach ($spec_rel->toArray() as $item) {
             if (!isset($specAttrData[$item['spec_id']])) {
                 $specAttrData[$item['spec_id']] = [
@@ -103,15 +123,21 @@ class Goods extends BaseModel
                 'item_id' => $item['spec_value_id'],
                 'spec_value' => $item['spec_value'],
             ];
+            $specAttrStr[$item['spec_value_id']] = $item['spec']['spec_name'].':'.$item['spec_value'].';';
         }
-
         // spec_list
         $specListData = [];
         foreach ($skuData->toArray() as $item) {
+            $attrs = explode('_', $item['spec_sku_id']);
+            $goods_attr = '';
+            foreach ($attrs as $specValueId) {
+                $goods_attr .= $specAttrStr[$specValueId];
+            }
             $specListData[] = [
                 'goods_spec_id' => $item['goods_spec_id'],
                 'spec_sku_id' => $item['spec_sku_id'],
                 'rows' => [],
+                'goods_attr' => $goods_attr,
                 'form' => [
                     'goods_no' => $item['goods_no'],
                     'goods_price' => $item['goods_price'],
@@ -142,6 +168,14 @@ class Goods extends BaseModel
         $status > 0 && $filter['goods_status'] = $status;
         !empty($search) && $filter['goods_name'] = ['like', '%' . trim($search) . '%'];
 
+        if($category_id > 0){
+            $category_model = new Category();
+            $data = $category_model->select();
+            $tree = new Tree($data->toArray(),$category_id,'category_id','parent_id');
+            $child = $tree->get_child();
+            $filter['category_id'] = ['in',array_column($child,'category_id')];
+        }
+
         // 排序规则
         $sort = [];
         if ($sortType === 'all') {
@@ -160,10 +194,11 @@ class Goods extends BaseModel
         $maxPriceSql = $GoodsSpec->field(['MAX(goods_price)'])
             ->where('goods_id', 'EXP', "= `$tableName`.`goods_id`")->buildSql();
         // 执行查询
+        //['goods_id','goods_name','category_id','is_hot',]
         $list = $this->field(['*', '(sales_initial + sales_actual) as goods_sales',
             "$minPriceSql AS goods_min_price",
             "$maxPriceSql AS goods_max_price"
-        ])->with(['category', 'image.file', 'spec'])
+        ])->with(['category','tags.tags', 'image.file', 'spec','file'])
             ->where('is_delete', '=', 0)
             ->where($filter)
             ->order($sort)
@@ -173,6 +208,7 @@ class Goods extends BaseModel
         return $list;
     }
 
+
     /**
      * 获取商品详情
      * @param $goods_id
@@ -181,7 +217,7 @@ class Goods extends BaseModel
      */
     public static function detail($goods_id)
     {
-        return self::get($goods_id, ['category', 'image.file', 'spec', 'spec_rel.spec', 'delivery.rule']);
+        return self::get($goods_id, ['category', 'image.file','tags.tags', 'spec', 'spec_rel.spec', 'delivery.rule','file']);
     }
 
     /**
@@ -197,7 +233,7 @@ class Goods extends BaseModel
             ->where('is_delete', '=', 0)
             ->where('goods_status', '=', 10)
             ->order(['sales_initial' => 'desc', 'goods_sort' => 'asc'])
-            ->limit(10)
+            ->limit(3)
             ->select();
     }
 
@@ -214,6 +250,7 @@ class Goods extends BaseModel
             ->where('is_delete', '=', 0)
             ->where('goods_status', '=', 10)
             ->order(['goods_id' => 'desc', 'goods_sort' => 'asc'])
+            ->limit(3)
             ->select();
     }
 
@@ -242,4 +279,31 @@ class Goods extends BaseModel
         return $goods_sku;
     }
 
+
+    /**
+     * 统计数量
+     * @param $filer
+     * @return mixed
+     */
+    public function getCount($filer)
+    {
+        return $this->where('is_delete',0)->where($filer)->count();
+    }
+
+    public function getStock($num = 50)
+    {
+        // 商品表名称
+        $tableName = $this->getTable();
+        // 多规格商品 获取总库存
+        $GoodsSpec = new GoodsSpec;
+        $StockNumSql = $GoodsSpec->field(['SUM(stock_num)'])
+            ->where('goods_id', 'EXP', "= `$tableName`.`goods_id`")->buildSql();
+        $list = $this->field(['*',
+            "$StockNumSql AS stock",
+        ])->with('spec')
+            ->where('is_delete', '=', 0)
+            ->having('stock <= '.$num)
+            ->select();
+        return $list;
+    }
 }

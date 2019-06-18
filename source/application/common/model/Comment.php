@@ -9,6 +9,7 @@
 namespace app\common\model;
 
 
+use think\Db;
 use think\Request;
 
 class Comment extends BaseModel
@@ -33,6 +34,11 @@ class Comment extends BaseModel
         return $this->belongsTo('Goods');
     }
 
+    public function child()
+    {
+        return $this->hasMany('Comment','parent_id');
+    }
+
     /**
      * 关联订单
      * @return \think\model\relation\BelongsTo
@@ -53,7 +59,7 @@ class Comment extends BaseModel
         return ['text' => $status[$value], 'value' => $value];
     }
 
-    public function getList($uid = 0,$goods_id = 0,$status = 0,$sortType = 'all')
+    public function getList($uid = 0,$goods_id = 0,$status = null,$sortType = 'all')
     {
         // 筛选条件
         $filter = [];
@@ -66,8 +72,9 @@ class Comment extends BaseModel
         if ($sortType === 'all') {
             $sort = ['comment_id' => 'desc'];
         }
-        $list =$this->with(['goods.image.file', 'user'])
+        $list =$this->with(['goods.image.file', 'user','child'])
                     ->where('is_delete', '=', 0)
+                    ->where('parent_id', '=', 0)
                     ->where($filter)
                     ->order($sort)
                     ->paginate(15,false,[
@@ -77,5 +84,8 @@ class Comment extends BaseModel
     }
 
 
-
+    public function remove()
+    {
+        return $this->save(['is_delete'=>1]);
+    }
 }

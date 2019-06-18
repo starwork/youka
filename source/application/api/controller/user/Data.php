@@ -13,6 +13,8 @@ use app\api\controller\Controller;
 use app\api\model\User;
 use app\common\library\Time;
 use app\common\model\Order as OrderModel;
+use app\api\model\User as UserModel;
+use app\common\model\PriceLog;
 use think\Db;
 use think\Request;
 
@@ -25,11 +27,27 @@ class Data extends Controller
 {
     protected $user;
 
-    public function __construct(Request $request = null)
+    public function _initialize()
     {
-        parent::__construct($request);
-        $this->user = $this->getUser();
+        parent::_initialize();
+        $this->user = $this->getUser();   // 用户信息
     }
+
+    public function getUserInfo($user_id)
+    {
+        $model = new UserModel();
+        $user = $model->find($user_id);
+        if(!$user){
+            return $this->renderError('用户不存在');
+        }
+        if($user['pid'] != $this->user['user_id'] && $user['ppid'] != $this->user['user_id']){
+            return $this->renderError('用户不存在');
+        }
+        $user['pparent'] = $model->where('user_id',$user['ppid'])->value('nickName');
+        $user['count'] = $model->where('pid',$user['user_id'])->count();
+        return $this->renderSuccess(compact('user'));
+    }
+
 
     /**
      * 数据统计
@@ -49,10 +67,11 @@ class Data extends Controller
 
         $today_user_count = $this->user_count($toady_start,$today_end);
         $yesterday_user_count = $this->user_count($yesterday_start,$yesterday_end);
-        $last_month__user_count = $this->user_count($last_month_start,$last_month_end);
+        $last_month_user_count = $this->user_count($last_month_start,$last_month_end);
 
         $user_list = $this->getPriceList($month_start,$month_end);
-        return compact('month_user_count','month_total','month_order_total','month_child_total','today_user_count','yesterday_user_count','last_month__user_count','user_list');
+        $data = compact('month_user_count','month_total','month_order_total','month_child_total','today_user_count','yesterday_user_count','last_month_user_count','user_list');
+        return $this->renderSuccess($data);
     }
 
     /**
@@ -60,7 +79,7 @@ class Data extends Controller
      */
     public function panel()
     {
-        list($start,$end) = Today();
+        list($start,$end) = Time::Today();
         $toady_user_count = $this->user_count($start,$end);
         $toady_total = $this->price_total($start,$end);
         $toady_child_total = $this->child_price_total($start,$end);
@@ -79,7 +98,7 @@ class Data extends Controller
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function team()
+    public function team($nickname = '')
     {
         list($toady_start,$today_end) = Time::Today();
         list($yesterday_start,$yesterday_end) = Time::YesterDay();
@@ -91,13 +110,13 @@ class Data extends Controller
         $yesterday_user_count = $this->user_count($yesterday_start,$yesterday_end);
         $last_month__user_count = $this->user_count($last_month_start,$last_month_end);
         $list = [];
-        $list[10] = $this->getUserList(10);
-        $list[20] = $this->getUserList(20);
-        $list[30] = $this->getUserList(30);
+        $list[10] = $this->getUserList(10,$nickname);
+        $list[20] = $this->getUserList(20,$nickname);
+        $list[30] = $this->getUserList(30,$nickname);
         $all_list = [];
-        $all_list[10] = $this->getChildUser(10);
-        $all_list[20] = $this->getChildUser(20);
-        $all_list[30] = $this->getChildUser(30);
+        $all_list[10] = $this->getChildUser(10,$nickname);
+        $all_list[20] = $this->getChildUser(20,$nickname);
+        $all_list[30] = $this->getChildUser(30,$nickname);
         return $this->renderSuccess(compact('today_user_count','month_user_count','yesterday_user_count','last_month__user_count','list','all_list'));
     }
 
@@ -106,7 +125,17 @@ class Data extends Controller
      * @param string $dataType
      * @return array
      */
-    public function team_price($dataType = 'today')
+    public function teamPrice()
+    {
+        $today = $this->team_price('today');
+        $week = $this->team_price('week');
+        $month = $this->team_price('month');
+        $all = $this->team_price('all');
+        return $this->renderSuccess(compact('today','week','month','all'));
+    }
+
+
+    private function team_price($dataType = 'today')
     {
         switch ($dataType){
             case 'today':
@@ -124,7 +153,7 @@ class Data extends Controller
                 break;
         }
         $list = $this->getPriceList($start,$end);
-        return $this->renderSuccess($list);
+        return $list;
     }
 
 
@@ -162,7 +191,7 @@ class Data extends Controller
      */
     private function child_price_total($start,$end)
     {
-        $total = Db::name('price_log')->alias('pl')->join('user u','pl.user_id = u.user_id')-> where('u.pid',$this->user['user_id'])->where('price','>',0)->where('create_time','BETWEEN',[$start,$end])->sum('price');
+        $total = Db::name('price_log')->alias('pl')->join('user u','pl.user_id = u.user_id')-> where('u.pid',$this->user['user_id'])->where('pl.price','>',0)->where('pl.create_time','BETWEEN',[$start,$end])->sum('pl.price');
         return $total;
     }
 
@@ -188,7 +217,7 @@ class Data extends Controller
      */
     private function child_order_count($start,$end)
     {
-        $count =  Db::name('order')->alias('o')->join('user u','o.user_id = u.user_id')-> where('u.pid',$this->user['user_id'])->where('create_time','BETWEEN',[$start,$end])->count();
+        $count =  Db::name('order')->alias('o')->join('user u','o.user_id = u.user_id')-> where('u.pid',$this->user['user_id'])->where('o.create_time','BETWEEN',[$start,$end])->count();
         return $count;
     }
 
@@ -206,16 +235,24 @@ class Data extends Controller
 
     private function getPriceList($start,$end)
     {
-        $list = Db::name('price_log')
+        $price_model = new PriceLog();
+        $list = $price_model
             ->alias('p')
             ->join('user u','p.user_id = u.user_id')
+            ->where('u.level','>',0)
+            ->where(function ($query){
+                $query->where('u.pid',$this->user['user_id'])->whereOr('u.ppid',$this->user['user_id']);
+            })
             ->where('p.create_time','BETWEEN',[$start,$end])
-            ->field('sum(price) as total')
-            ->group('user_id')
+            ->field('p.user_id,sum(p.price) as total')
+            ->group('p.user_id')
             ->order('total','desc')
-            ->paginate(15);
+            ->select();
         foreach ($list as $k => $v){
-            $list[$k]['user'] = User::get($v['user_id']);
+            $user = User::get($v['user_id']);
+            $list[$k]['nickName'] = $user['nickName'];
+            $list[$k]['avatarUrl'] = $user['avatarUrl'];
+            $list[$k]['level'] = $user['level'];
         }
         return $list;
     }
@@ -228,11 +265,19 @@ class Data extends Controller
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    private function getUserList($level)
+    private function getUserList($level,$nickname)
     {
-        $list = User::where('pid',$this->user['user_id'])
-            ->where('level',$level)
-            ->select();
+        if($nickname){
+            $list = User::where('pid',$this->user['user_id'])
+                ->where('level',$level)
+                ->where('nickName','like','%'.$nickname.'%')
+                ->select();
+        }else{
+            $list = User::where('pid',$this->user['user_id'])
+                ->where('level',$level)
+                ->select();
+        }
+
         return $list;
     }
 
@@ -245,15 +290,24 @@ class Data extends Controller
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    private function getChildUser($level)
+    private function getChildUser($level,$nickname)
     {
-        $list = User::where('pid',$this->user['user_id'])
-            ->where('level',$level)
-            ->select();
-        $p_list = User::where('ppid',$this->user['user_id'])
-            ->where('level',$level)
-            ->select();
-        return array_merge($list,$p_list);
+        if($nickname){
+            $list = User::where(function ($query){
+                $query->where('pid',$this->user['user_id'])->whereOr('ppid',$this->user['user_id']);
+            })
+                ->where('level',$level)
+                ->where('nickName','like','%'.$nickname.'%')
+                ->select();
+        }else{
+            $list = User::where(function ($query){
+                $query->where('pid',$this->user['user_id'])->whereOr('ppid',$this->user['user_id']);
+            })
+                ->where('level',$level)
+                ->select();
+        }
+
+        return $list;
     }
 
 

@@ -30,6 +30,33 @@
                                     </div>
                                 </div>
 
+
+                                <div class="widget-head am-cf">
+                                    <div class="widget-title am-fl">微信支付设置</div>
+                                </div>
+
+                                <div class="am-form-group ">
+                                    <label class="am-u-sm-3 am-form-label">
+                                        MCHID  <span class="tpl-form-line-small-title">微信支付商户号</span>
+                                    </label>
+                                    <div class="am-u-sm-9">
+                                        <input type="text" class="tpl-form-input"
+                                               name="wechat[mchid]"
+                                               value="<?= $values['mchid'] ?>">
+                                    </div>
+                                </div>
+
+                                <div class="am-form-group ">
+                                    <label class="am-u-sm-3 am-form-label">
+                                        APIKEY  <span class="tpl-form-line-small-title">微信支付密钥</span>
+                                    </label>
+                                    <div class="am-u-sm-9">
+                                        <input type="text" class="tpl-form-input"
+                                               name="wechat[apikey]"
+                                               value="<?= $values['apikey'] ?>">
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="am-form-group">
                                 <div class="am-u-sm-9 am-u-sm-push-3 am-margin-top-lg">

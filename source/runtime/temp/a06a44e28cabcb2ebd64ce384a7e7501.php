@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:95:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\user\price_log\index.php";i:1557739361;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557993091;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:95:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\user\price_log\index.php";i:1560504024;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -127,7 +127,8 @@
                             <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>用户</th>
+                                <th>用户昵称</th>
+                                <th>用户头像</th>
                                 <th>金额</th>
                                 <th>订单</th>
                                 <th>描述</th>
@@ -138,7 +139,13 @@
                             <?php if (!$list->isEmpty()): foreach ($list as $item): ?>
                                 <tr>
                                     <td class="am-text-middle"><?= $item['id'] ?></td>
-                                    <td class="am-text-middle"><?= $item['user']['phone'] ?></td>
+
+                                    <td class="am-text-middle"><?= $item['user']['nickName'] ?></td>
+                                    <td class="am-text-middle">
+                                        <a href="<?= $item['user']['avatarUrl'] ?>" title="点击查看大图" target="_blank">
+                                            <img src="<?= $item['user']['avatarUrl'] ?>" width="72" height="72" alt="">
+                                        </a>
+                                    </td>
                                     <td class="am-text-middle"><?= $item['price'] ?></td>
                                     <td class="am-text-middle"><?= $item['order']['order_no'] ?></td>
                                     <td class="am-text-middle"><?= $item['text'] ?: '--' ?></td>
@@ -202,6 +209,8 @@
 <script src="/assets//store/js/art-template.js"></script>
 <script src="/assets//store/js/app.js"></script>
 <script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

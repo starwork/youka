@@ -1,5 +1,8 @@
 <?php
 
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods:*");
 // [ 应用入口文件 ]
 
 // 定义运行目录

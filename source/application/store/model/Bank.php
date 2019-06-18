@@ -8,8 +8,8 @@
 
 namespace app\store\model;
 
-
-class Bank
+use app\common\model\Bank as BankModel;
+class Bank extends BankModel
 {
 
 }

@@ -27,6 +27,84 @@ class Goods extends Controller
         return $this->fetch('index', compact('list','catgory','goods_status','category_id','goods_name'));
     }
 
+
+    public function export($goods_status = 0,$category_id = 0,$goods_name = '')
+    {
+        // 筛选条件
+        $filter = [];
+        $category_id > 0 && $filter['category_id'] = $category_id;
+        $goods_status > 0 && $filter['goods_status'] = $goods_status;
+        !empty($search) && $filter['goods_name'] = ['like', '%' . trim($search) . '%'];
+
+        return $this->exportList($filter);
+    }
+
+    private function exportList($filter = [])
+    {
+        $headlist = [
+            'ID',
+            '商品名称',
+            '商品编码',
+            '商品分类',
+            '初始销量',
+            '实际销量',
+            '商品状态',
+            '商品规格',
+            '商品价格',
+            '商品划线价',
+            '当前库存数量',
+            '商品重量(Kg)'
+        ];
+        $sort = ['goods_sort', 'goods_id' => 'desc'];
+        $model = new GoodsModel();
+        $list = $model->with(['category','tags.tags', 'spec', 'spec_rel.spec'])
+            ->where('is_delete', '=', 0)
+            ->where($filter)
+            ->order($sort)
+            ->select();
+        $data = [];
+        foreach ($list as $k => $goods){
+            if ($goods['spec_type'] == 20){
+                $list[$k]['specData'] = $goods->getManySpecData($goods['spec_rel'], $goods['spec']);
+
+                foreach ($list[$k]['specData']['spec_list'] as $v){
+                    $arr = [
+                        $goods['goods_id'],
+                        $goods['goods_name'],
+                        $v['form']['goods_no'],
+                        $goods['category']['name'],
+                        $goods['sales_initial'],
+                        $goods['sales_actual'],
+                        $goods['goods_status']['text'],
+                        $v['goods_attr'],
+                        $v['form']['goods_price'],
+                        $v['form']['line_price'],
+                        $v['form']['stock_num'],
+                        $v['form']['goods_weight'],
+                    ];
+                    $data[] = $arr;
+                }
+            }else{
+                $arr = [
+                    $goods['goods_id'],
+                    $goods['goods_name'],
+                    $goods['spec'][0]['goods_no'],
+                    $goods['category']['name'],
+                    $goods['sales_initial'],
+                    $goods['sales_actual'],
+                    $goods['goods_status']['text'],
+                    '',
+                    $goods['spec'][0]['goods_price'],
+                    $goods['spec'][0]['line_price'],
+                    $goods['spec'][0]['stock_num'],
+                    $goods['spec'][0]['goods_weight'],
+                ];
+                $data[] = $arr;
+            }
+        }
+        csv_export($data,$headlist,'goods-'.date('Ymd'));
+    }
+
     /**
      * 添加商品
      * @return array|mixed
@@ -68,6 +146,25 @@ class Goods extends Controller
         }
     }
 
+    public function hot($goods_id,$state)
+    {
+        $model = GoodsModel::get($goods_id);
+        if($state){
+            $data = [
+                'is_hot' => 1
+            ];
+        }else{
+            $data = [
+                'is_hot' => 0
+            ];
+        }
+        if($model->save($data)){
+            return $this->renderSuccess('修改成功');
+        }else{
+            return $this->renderSuccess('修改失败');
+        }
+    }
+
     /**
      * 删除商品
      * @param $goods_id
@@ -98,11 +195,16 @@ class Goods extends Controller
             $catgory = Category::getCacheTree();
             // 配送模板
             $delivery = Delivery::getAll();
+
+            //tags
+            $tags = $model['tags']->toArray();
+            $tags_name = is_array($tags) ? implode(',',array_column($tags,'tags_name')) : '';
+            $tags_ids =  is_array($tags) ? implode(',',array_column($tags,'tags_id')) : '';
             // 多规格信息
             $specData = 'null';
             if ($model['spec_type'] == 20)
                 $specData = json_encode($model->getManySpecData($model['spec_rel'], $model['spec']));
-            return $this->fetch('edit', compact('model', 'catgory', 'delivery', 'specData'));
+            return $this->fetch('edit', compact('model', 'catgory', 'delivery', 'specData','tags_name','tags_ids'));
         }
         // 更新记录
         if ($model->edit($this->postData('goods'))) {
@@ -111,5 +213,6 @@ class Goods extends Controller
         $error = $model->getError() ?: '更新失败';
         return $this->renderError($error);
     }
+
 
 }

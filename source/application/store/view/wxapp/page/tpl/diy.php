@@ -35,3 +35,22 @@
         </div>
     </div>
 </script>
+
+<script id="tpl_diy_navBar" type="text/template">
+    <div class="drag" id="diy-{{ id }}" data-itemid="{{ id }}">
+        <div class="diy-banner">
+            {{each data}}
+            <img src="{{ $value.imgUrl }}">
+            {{/each}}
+            <div class="dots center {{ style.btnShape }}">
+                {{each data}}
+                <span style="background: {{ style.btnColor }};"></span>
+                {{/each}}
+            </div>
+        </div>
+        <div class="btn-edit-del">
+            <div class="btn-edit">编辑</div>
+            <div class="btn-del">删除</div>
+        </div>
+    </div>
+</script>

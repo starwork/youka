@@ -6,50 +6,24 @@
                     <div class="widget-body">
                         <fieldset>
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">短信通知（ 阿里云短信 )</div>
-                            </div>
-                            <input type="hidden" name="sms[default]" value="aliyun">
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> AccessKeyId </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input" name="sms[engine][aliyun][AccessKeyId]"
-                                           value="<?= $values['engine']['aliyun']['AccessKeyId'] ?>" required>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> AccessKeySecret </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][AccessKeySecret]"
-                                           value="<?= $values['engine']['aliyun']['AccessKeySecret'] ?>" required>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 短信签名 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input" name="sms[engine][aliyun][sign]"
-                                           value="<?= $values['engine']['aliyun']['sign'] ?>" required>
-                                </div>
-                            </div>
-                            <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">用户注册短信</div>
+                                <div class="widget-title am-fl">支付成功通知</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][resgiter][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[order_pay][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['resgiter']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['order_pay']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][resgiter][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[order_pay][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['resgiter']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['order_pay']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -60,48 +34,31 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][resgiter][template_code]"
-                                           value="<?= $values['engine']['aliyun']['resgiter']['template_code'] ?>">
-                                    <small>例如：SMS_139800030</small>
+                                           name="tplmsg[order_pay][template_code]"
+                                           value="<?= $values['order_pay']['template_code'] ?>">
+                                    <small>模板编号AT0009，关键词 (订单编号、支付时间、订单金额、支付方式)</small>
                                 </div>
                             </div>
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您正在申请手机注册，验证码为：${code}，5分钟内有效！</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][resgiter][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['resgiter']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="resgiter"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">找回密码短信</div>
+                                <div class="widget-title am-fl">订单发货通知</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][resetpwd][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[delivery][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['resetpwd']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['delivery']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][resetpwd][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[delivery][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['resetpwd']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['delivery']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -112,50 +69,31 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][resetpwd][template_code]"
-                                           value="<?= !empty($values['engine']['aliyun']['resetpwd']['template_code']) ? $values['engine']['aliyun']['resetpwd']['template_code'] : '' ?>">
-                                    <small>例如：SMS_139800030</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][resetpwd][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['resetpwd']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="resetpwd"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您的动态码为：${code}，您正在进行密码重置操作，如非本人操作，请忽略本短信！</small>
+                                           name="tplmsg[delivery][template_code]"
+                                           value="<?= !empty($values['delivery']['template_code']) ? $values['delivery']['template_code'] : '' ?>">
+                                    <small>模板编号AT0007，关键词 (订单编号、发货时间、物流公司、快递单号、收件信息)</small>
                                 </div>
                             </div>
 
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">新付款订单提醒</div>
+                                <div class="widget-title am-fl">佣金通知</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][order_pay][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[yongjin][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['order_pay']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['yongjin']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][order_pay][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[yongjin][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['order_pay']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['yongjin']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -166,50 +104,31 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][order_pay][template_code]"
-                                           value="<?= $values['engine']['aliyun']['order_pay']['template_code'] ?>">
-                                    <small>例如：SMS_139800030</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您有一条新订单，订单号为：${order_no}，请注意查看。</small>
-                                </div>
-                            </div>
-
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][order_pay][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['order_pay']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="order_pay"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
+                                           name="tplmsg[yongjin][template_code]"
+                                           value="<?= !empty($values['yongjin']['template_code']) ? $values['yongjin']['template_code'] : '' ?>">
+                                    <small>关键词 (订单号、佣金金额、时间)</small>
                                 </div>
                             </div>
 
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">订单发货短信</div>
+                                <div class="widget-title am-fl">等级变更</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][delivery][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[level][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['delivery']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['level']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][delivery][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[level][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['delivery']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['level']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -220,50 +139,32 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][delivery][template_code]"
-                                           value="<?= !empty($values['engine']['aliyun']['delivery']['template_code']) ? $values['engine']['aliyun']['delivery']['template_code'] : '' ?>">
-                                    <small>例如：SMS_139800030</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您的订单${order_no},使用${company}发货啦！快递单号${express_no}。</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][delivery][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['delivery']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="delivery"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
+                                           name="tplmsg[level][template_code]"
+                                           value="<?= !empty($values['level']['template_code']) ? $values['level']['template_code'] : '' ?>">
+                                    <small>关键词 (当前等级、原始等级、升级时间)</small>
                                 </div>
                             </div>
 
 
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">提现成功短信</div>
+                                <div class="widget-title am-fl">提现通知</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][pay_success][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[pay_bank][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['pay_success']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['pay_bank']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][pay_success][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[pay_bank][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['pay_success']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['pay_bank']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -274,49 +175,31 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][pay_success][template_code]"
-                                           value="<?= !empty($values['engine']['aliyun']['pay_success']['template_code']) ? $values['engine']['aliyun']['pay_success']['template_code'] : '' ?>">
-                                    <small>例如：SMS_139800030</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您的提现申请通过,提现金额${price}。</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][pay_success][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['pay_success']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="pay_success"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
+                                           name="tplmsg[pay_bank][template_code]"
+                                           value="<?= !empty($values['pay_bank']['template_code']) ? $values['pay_bank']['template_code'] : '' ?>">
+                                    <small>关键词 (提现金额、银行、银行卡号、审核结果，审核时间，描述)</small>
                                 </div>
                             </div>
 
                             <div class="widget-head am-cf">
-                                <div class="widget-title am-fl">提现失败短信</div>
+                                <div class="widget-title am-fl">会员加入通知</div>
                             </div>
                             <div class="am-form-group">
                                 <label class="am-u-sm-3 am-form-label form-require">
-                                    是否开启短信提醒
+                                    是否启用
                                 </label>
                                 <div class="am-u-sm-9">
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][pay_error][is_enable]" value="1"
+                                        <input type="radio" name="tplmsg[child][is_enable]" value="1"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['pay_error']['is_enable'] === '1' ? 'checked' : '' ?>
+                                            <?= $values['child']['is_enable'] === '1' ? 'checked' : '' ?>
                                                required>
                                         开启
                                     </label>
                                     <label class="am-radio-inline">
-                                        <input type="radio" name="sms[engine][aliyun][pay_error][is_enable]" value="0"
+                                        <input type="radio" name="tplmsg[child][is_enable]" value="0"
                                                data-am-ucheck
-                                            <?= $values['engine']['aliyun']['pay_error']['is_enable'] === '0' ? 'checked' : '' ?>>
+                                            <?= $values['child']['is_enable'] === '0' ? 'checked' : '' ?>>
                                         关闭
                                     </label>
                                 </div>
@@ -327,27 +210,9 @@
                                 </label>
                                 <div class="am-u-sm-9">
                                     <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][pay_error][template_code]"
-                                           value="<?= !empty($values['engine']['aliyun']['pay_error']['template_code']) ? $values['engine']['aliyun']['pay_error']['template_code'] : '' ?>">
-                                    <small>例如：SMS_139800030</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <div class="am-u-sm-9 am-u-sm-push-3">
-                                    <small>模板内容：您的提现申请失败，失败原因:${content}。</small>
-                                </div>
-                            </div>
-                            <div class="am-form-group">
-                                <label class="am-u-sm-3 am-form-label form-require"> 接收手机号 </label>
-                                <div class="am-u-sm-9">
-                                    <input type="text" class="tpl-form-input"
-                                           name="sms[engine][aliyun][pay_error][accept_phone]"
-                                           value="<?= $values['engine']['aliyun']['pay_error']['accept_phone'] ?>">
-                                    <div class="help-block">
-                                        <small>接收测试： <a class="j-sendTestMsg" data-msg-type="pay_error"
-                                                        href="javascript:void(0);">点击发送</a>
-                                        </small>
-                                    </div>
+                                           name="tplmsg[child][template_code]"
+                                           value="<?= !empty($values['child']['template_code']) ? $values['child']['template_code'] : '' ?>">
+                                    <small>关键词 (时间,昵称、级别、描述)</small>
                                 </div>
                             </div>
 

@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:86:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\order\index.php";i:1557972422;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1557993091;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:2:{s:86:"D:\myphp_www\PHPTutorial\WWW\mall\web/../source/application/store\view\order\index.php";i:1559181526;s:82:"D:\myphp_www\PHPTutorial\WWW\mall\source\application\store\view\layouts\layout.php";i:1560391351;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -132,10 +132,10 @@
                                            href="javascript:void(0);" style="display: <?= check_auth('order/export', $uid) ? 'inline-block':'none' ?>;">
                                             <i class="iconfont icon-daochu am-margin-right-xs"></i>订单导出
                                         </a>
-                                        <a class="j-export am-btn am-btn-secondary am-radius"
-                                           href="index.php?s=/store/order.operate/batchdelivery">
-                                            <i class="iconfont icon-daoru am-margin-right-xs"></i>批量发货
-                                        </a>
+<!--                                        <a class="j-export am-btn am-btn-secondary am-radius"-->
+<!--                                           href="index.php?s=/store/order.operate/batchdelivery">-->
+<!--                                            <i class="iconfont icon-daoru am-margin-right-xs"></i>批量发货-->
+<!--                                        </a>-->
                                     </div>
                                 </div>
                             </div>
@@ -304,6 +304,8 @@
 <script src="/assets//store/js/art-template.js"></script>
 <script src="/assets//store/js/app.js"></script>
 <script src="/assets//store/js/file.library.js"></script>
+<script src="/assets//store/js/select.data.js"></script>
+
 </body>
 
 </html>

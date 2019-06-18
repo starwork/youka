@@ -59,6 +59,25 @@
                                 </div>
                             </div>
 
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">推广图片 </label>
+                                <div class="am-u-sm-9 am-u-end">
+                                    <div class="am-form-file">
+                                        <div class="am-form-file">
+                                            <button type="button"
+                                                    class="upload-file1 am-btn am-btn-secondary am-radius">
+                                                <i class="am-icon-cloud-upload"></i> 选择图片
+                                            </button>
+                                            <div class="uploader-list am-cf">
+                                            </div>
+                                        </div>
+                                        <div class="help-block am-margin-top-sm">
+                                            <small>尺寸663x323像素，大小2M以下</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="widget-head am-cf">
                                 <div class="widget-title am-fl">规格/库存</div>
                             </div>
@@ -196,6 +215,22 @@
                                 </div>
                             </div>
 
+                            <div class="am-form-group goods-spec-many" style="display: block;">
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">商品标签 </label>
+                                <div class="am-u-sm-9 am-u-end">
+                                    <div class="spec-group-item ">
+                                        <div class="spec-list tags-list am-cf">
+                                            <div class="spec-item-add am-cf am-fl">
+                                                <input type="text" class="ipt-specItem am-fl am-field-valid">
+                                                <button type="button" class="btn-addTagsItem am-btn am-fl">添加</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                             <div class="widget-head am-cf">
                                 <div class="widget-title am-fl">商品详情</div>
                             </div>
@@ -241,6 +276,20 @@
                                 </div>
                             </div>
                             <div class="am-form-group">
+                                <label class="am-u-sm-3 am-u-lg-2 am-form-label form-require">是否热销 </label>
+                                <div class="am-u-sm-9 am-u-end">
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="goods[is_hot]" value="1" data-am-ucheck
+                                               checked>
+                                        是
+                                    </label>
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="goods[is_hot]" value="0" data-am-ucheck>
+                                        否
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
                                 <label class="am-u-sm-3 am-u-lg-2 am-form-label">初始销量</label>
                                 <div class="am-u-sm-9 am-u-end">
                                     <input type="number" class="tpl-form-input" name="goods[sales_initial]"
@@ -278,6 +327,19 @@
 <!-- 商品多规格模板 -->
 {{include file="goods/_template/spec_many" /}}
 
+<script id="tpl_tags" type="text/template">
+    {{ each tags }}
+    <div class="spec-item am-fl" data-item-index="{{ $index }}">
+        <span>{{ $value }}</span>
+        <i class="tag-item-delete iconfont icon-shanchu1" title="点击删除"></i>
+    </div>
+    {{ /each }}
+    <div class="spec-item-add am-cf am-fl">
+        <input type="text" class="ipt-specItem am-fl am-field-valid">
+        <button type="button" class="btn-addTagsItem am-btn am-fl">添加</button>
+    </div>
+</script>
+
 <script src="assets/store/js/ddsort.js"></script>
 <script src="assets/store/plugins/umeditor/umeditor.config.js"></script>
 <script src="assets/store/plugins/umeditor/umeditor.min.js"></script>
@@ -297,6 +359,12 @@
             , multiple: true
         });
 
+        $('.upload-file1').selectImages({
+            name: 'goods[file_id]'
+        });
+
+
+
         // 图片列表拖动
         $('.uploader-list').DDSort({
             target: '.file-item',
@@ -306,6 +374,39 @@
                 'background-color': '#fff'
             }
         });
+        var tags = [];
+        var tags_ids = [];
+        $(".tags-list").on('click','.btn-addTagsItem',function () {
+            var name = $(this).prev().val();
+            if(name == ''){
+                layer.msg('请填写标签');
+                return false;
+            }
+            // 添加到数据库
+            var load = layer.load();
+            $.post(STORE_URL + '/goods.tags/addTags', {
+                name: name
+            }, function (result) {
+                layer.close(load);
+                if (result.code !== 1) {
+                    layer.msg(result.msg);
+                    return false;
+                }
+                tags.push(name);
+                tags_ids.push(result.data.tags_id);
+                console.log(tags)
+                console.log(tags_ids)
+                var data = { tags: tags};
+                $(".tags-list").html(template('tpl_tags', data));
+            });
+        })
+        $(".tags-list").on('click','.tag-item-delete',function () {
+            var itemIndex = $(this).parent().data('item-index');
+            tags.splice(itemIndex, 1);
+            tags_ids.splice(itemIndex, 1);
+            var data = { tags: tags};
+            $(".tags-list").html(template('tpl_tags', data));
+        })
 
         // 注册商品多规格组件
         var specMany = new GoodsSpec({
@@ -332,7 +433,8 @@
             buildData: function () {
                 return {
                     goods: {
-                        spec_many: specMany.getData()
+                        spec_many: specMany.getData(),
+                        tags:tags_ids
                     }
                 };
             },
@@ -353,5 +455,9 @@
 <style>
     .edui-container img{
         max-width: 100%;
+    }
+    .am-form .am-form-file .upload-file1{
+        font-size: 1.24rem;
+        padding: .6em 1em;
     }
 </style>

@@ -8,11 +8,15 @@
 
 namespace app\api\controller\user;
 
-
-use app\api\controller\BankCard;
 use app\api\controller\Controller;
+use app\api\model\BankCard;
+use app\api\model\OrderGoods;
+use app\api\model\User;
+use app\common\library\Time;
 use app\common\library\wechat\WxPay;
+use app\common\model\PayBank;
 use app\common\model\PriceLog;
+use think\Db;
 
 class Price extends Controller
 {
@@ -29,43 +33,290 @@ class Price extends Controller
         $model = new PriceLog();
         $filer = [];
         $filer['user_id'] = $this->user['user_id'];
-        $list = $model->where($filer)->paginate(15);
-        return $this->renderSuccess($list);
+        $list = $model->where($filer)->order('id','desc')->select();
+        $inMoney = $model->where($filer)->where('price','>',0)->sum('price');
+        $outMoney = $model->where($filer)->where('price','<',0)->sum('price');
+        return $this->renderSuccess(compact('list','inMoney','outMoney'));
     }
 
+    public function InPrice($month = '')
+    {
+        //$months = $this->getMonth();
+        $model = new PriceLog();
+        $filer = [];
+        $filer['user_id'] = $this->user['user_id'];
+        $total =  $model->where($filer)->where('price','>',0)->where('type',1)->sum('price');
+        if($month == ''){
+            $month = Time::Month();
+        }else{
+            $start = strtotime($month);
+            $end = mktime(23,59,59,(date('m',$start)+1),0,date('Y',$start));
+            $month = [$start,$end];
+        }
+        $month_total = $model->where($filer)->whereBetween('create_time',$month)->where('price','>',0)->where('type',1)->sum('price');
+        $list = Db::name('order_goods')
+            ->alias('og')
+            ->field('og.goods_name,sum(og.total_num) as goods_num')
+            ->join('order o','o.order_id = og.order_id')
+            ->join('user u','o.user_id = u.user_id')
+            ->whereBetween('o.create_time',$month)
+            ->where(function ($query){
+                $query->where('u.pid',$this->user['user_id'])->whereOr('u.ppid',$this->user['user_id']);
+            })->group('og.goods_id')->select();
+        return $this->renderSuccess(compact('total','month_total','list'));
+        exit;
+        $pricelist = [];
+        $list = [];
+
+        foreach ($months as $k => $month){
+            $pricelist[$k]['name'] = date('Y年m月',$month[0]);
+            $pricelist[$k]['total'] = $model->where($filer)->whereBetween('create_time',$month)->where('price','>',0)->where('text','like','%佣金')->sum('price');
+            $list[$k]['name'] = $pricelist[$k]['name'];
+            $list[$k]['amount']['count'] = $this->childGoodsNum($this->user['user_id'],$month);
+            $list[$k]['amount']['total'] = $pricelist[$k]['total'];
+        }
+        return $this->renderSuccess(compact('total','pricelist','list'));
+    }
+
+    public function OutPrice($month = '')
+    {
+        //$months = $this->getMonth();
+        $model = new PriceLog();
+        $filer = [];
+        $filer['user_id'] = $this->user['user_id'];
+        $total =  $model->where($filer)->where('price','<',0)->sum('price');
+        if($month == ''){
+            $month = Time::Month();
+        }else{
+            $start = strtotime($month);
+            $end = mktime(23,59,59,(date('m',$start)+1),0,date('Y',$start));
+            $month = [$start,$end];
+        }
+        $month_total = $model->where($filer)->whereBetween('create_time',$month)->where('price','<',0)->sum('price');
+        return $this->renderSuccess(compact('total','month_total','list'));
+        exit;
+    }
+
+    private function childGoodsNum($user_id,$time)
+    {
+        $count = Db::name('order_goods')
+            ->alias('og')
+            ->join('order o','og.order_id = o.order_id')
+            ->join('user u','o.user_id = u.user_id')
+            ->where('o.pay_status',20)
+            ->whereBetween('o.create_time',$time)
+            ->where(function ($query) use ($user_id){
+                $query->where('u.pid',$user_id)->whereOr('u.ppid',$user_id);
+            })
+            ->sum('og.total_num');
+        return $count;
+    }
+
+    //近六个月的时间戳
+    private function getMonth($num = 6)
+    {
+        $months = [];
+        for ($i = 0;$i < $num;$i++){
+            $months[] = Time::LastMonth($i-1);
+        }
+        return $months;
+    }
+
+
+    public function withdraw()
+    {
+        $userInfo = $this->getUser();
+        $model = new BankCard();
+        $bank = $model->with('file')->where('user_id',$userInfo['user_id'])->select();
+        return $this->renderSuccess(compact('userInfo','bank'));
+    }
 
     public function pay_bank()
     {
+        $start_time = time() - (3600*24*30*3);  //三个月是否有订单支付
+        $order_count = (new \app\api\model\Order())->where('user_id',$this->user['user_id'])->where('pay_status',20)->where('pay_time','<',$start_time)->count();
+        if($order_count == 0){
+            return $this->renderError('近三个月无订单，无法提现！');
+        }
+
         $price = $this->request->post('price');
         $bank_id = $this->request->post('bank_id');
+        $draw = config('draw');
+        if($price <= 0){
+            return $this->renderError('输入提现金额');
+        }
+        if(isset($draw['min_price']) && $price < $draw['min_price']){
+            return $this->renderError('每次提现金额不能少于'.$draw['min_price']);
+        }
+        $week = Time::Week();
+        $count = (new PayBank())->where('user_id',$this->user['user_id'])->whereBetween('create_time',$week)->count();
+        if(isset($draw['max_num']) && $count >= $draw['max_num']){
+            return $this->renderError('本周超过申请次数，请下周再申请！');
+        }
         if($this->user['price'] < $price){
             return $this->renderError('提现金额不能超过'.$this->user['price']);
         }
-        $bank = BankCard::get($bank_id);
+        $bank = (new \app\common\model\BankCard())->where('user_id',$this->user['user_id'])->where('id',$bank_id)->find();
         if(!$bank){
             return $this->renderError('选择提现银行卡');
         }
-        $wxConfig = Setting::getItem('payment');
-        $WxPay = new WxPay($wxConfig['engine']['wechat']);
-        if($WxPay->pay_bank($this->user,$price,$bank)){
-            return $this->renderError('提现成功');
+        if($bank['open_bank_name'] == ''){
+            return $this->renderError('该银行卡无开户行信息，选择其他银行卡');
         }
-        return $this->renderError('提现失败');
+        $partner_trade_no = $this->PayBankNo();
+        Db::startTrans();
+        try{
+            $user = (new User())->lock(true)->where('user_id',$this->user['user_id'])->find();
+            if($user['price'] < $price){
+                return $this->renderError('提现金额不能超过余额');
+            }
+            User::where('user_id',$this->user['user_id'])->setDec('price',$price);
+            (new PriceLog())->save([
+                'user_id' => $this->user['user_id'],
+                'price' => '-'.$price,
+                'text' => '提现',
+                'type' => 2,
+                'order_id' => 0
+            ]);
+
+            (new PayBank())->allowField(true)->save([
+                'user_id' => $this->user['user_id'],
+                'real_name' => $bank['real_name'],
+                'bank_name' => $bank['bank_name'],
+                'open_bank_name' => $bank['open_bank_name'],
+                'card_no' => $bank['bank_card_no'],
+                'price' => $price,
+                'status' => 10,
+                'trade_no' => $partner_trade_no,
+            ]);
+            Db::commit();
+            return $this->renderSuccess('','提交成功,等待审核打款');
+        }catch (\Exception $e){
+            Db::rollback();
+            return $this->renderError('提交失败');
+        }
+//        $wxConfig = Setting::getItem('payment');
+//        $WxPay = new WxPay($wxConfig['engine']['wechat']);
+//        if($WxPay->pay_bank($this->user,$price,$bank)){
+//            return $this->renderError('提现成功');
+//        }
+
     }
+
+    /**
+     * 生成订单号
+     */
+    protected function PayBankNo()
+    {
+        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    }
+
+
+    public function subOrderManage()
+    {
+        $day7 = $this->orderManage(7);
+        $day15 = $this->orderManage(15);
+        $day30 = $this->orderManage(30);
+        return $this->renderSuccess(compact('day7','day15','day30'));
+    }
+    private function orderManage($dataType)
+    {
+        $date_list = $this->getDate($dataType);
+        $data = [];
+        foreach ($date_list as $v){
+            $data[$v] = $this->subOrderCount($v);
+        }
+        $keys = array_keys($data);
+        foreach ($keys as $key => $val){
+            $keys[$key] = substr($val,5);
+        }
+        $data = array_values($data);
+        return compact('keys','data');
+    }
+
+    private function subOrderCount($date)
+    {
+        $start = strtotime($date);
+        $end = $start + 86400 -1;
+        $count = Db::name('order')
+            ->alias('o')
+            ->join('user u','o.user_id = u.user_id')
+            ->where(function ($query){
+                $query->where('u.pid',$this->user['user_id'])->whereOr('ppid',$this->user['user_id']);
+            })
+            ->where('o.pay_status',20)
+            ->whereBetween('o.create_time',[$start,$end])
+            ->count();
+        return $count;
+    }
+
 
     /**
      * 财富管理
      * @param $dataType 天数
      * @return array
      */
-    public function wealth_manage($dataType)
+    public function wealthManage()
+    {
+        $day7 = $this->wealth(7);
+        $day15 = $this->wealth(15);
+        $day30 = $this->wealth(30);
+        return $this->renderSuccess(compact('day7','day15','day30'));
+    }
+
+
+    private function wealth($dataType)
     {
         $date_list = $this->getDate($dataType);
         $data = [];
         foreach ($date_list as $v){
             $data[$v] = $this->priceList($v);
         }
-        return $this->renderSuccess($data);
+        $keys = array_keys($data);
+        foreach ($keys as $key => $val){
+            $keys[$key] = substr($val,5);
+        }
+        $data = array_values($data);
+        return compact('keys','data');
+    }
+
+    /**
+     * 人员管理
+     * @param $dataType 天数
+     * @return array
+     */
+    public function personManage()
+    {
+        $day7 = $this->personList(7);
+        $day15 = $this->personList(15);
+        $day30 = $this->personList(30);
+        return $this->renderSuccess(compact('day7','day15','day30'));
+    }
+
+
+    private function personList($dataType)
+    {
+        $date_list = $this->getDate($dataType);
+        $data = [];
+        foreach ($date_list as $v){
+            $data[$v] = $this->userList($v);
+        }
+        $keys = array_keys($data);
+        foreach ($keys as $key => $val){
+            $keys[$key] = substr($val,5);
+        }
+        $data = array_values($data);
+        return compact('keys','data');
+    }
+
+    private function userList($date)
+    {
+        $start = strtotime($date);
+        $end = $start + 86400 -1;
+        $count = User::where('create_time','BETWEEN',[$start,$end])->where(function ($query){
+            $query->where('pid',$this->user['user_id'])->whereOr('ppid',$this->user['user_id']);
+        })->count();
+        return $count;
     }
 
     /**
@@ -77,7 +328,7 @@ class Price extends Controller
     {
         $start = strtotime($date);
         $end = $start + 86400 -1;
-        $total = PriceLog::where('user_id',$this->user['user_id'])->where('create_time','BETWEEN',[$start,$end])->sum('price');
+        $total = PriceLog::where('user_id',$this->user['user_id'])->where('price','>',0)->where('create_time','BETWEEN',[$start,$end])->sum('price');
         return sprintf("%01.2f",$total);
     }
 
@@ -93,6 +344,6 @@ class Price extends Controller
         for($i = 0; $i < $num;$i++){
             $data[] = date('Y-m-d',$time-($i*86400));
         }
-        return $data;
+        return array_reverse($data);
     }
 }

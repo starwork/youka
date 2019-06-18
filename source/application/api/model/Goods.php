@@ -24,6 +24,8 @@ class Goods extends GoodsModel
         'update_time'
     ];
 
+
+
     /**
      * 商品详情：HTML实体转换回普通字符
      * @param $value
@@ -33,7 +35,6 @@ class Goods extends GoodsModel
     {
        return htmlspecialchars_decode($value);
     }
-
     /**
      * 根据商品id集获取商品列表 (购物车列表用)
      * @param $goodsIds

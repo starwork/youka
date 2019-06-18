@@ -164,11 +164,12 @@ return [
 
     'log'                    => [
         // 日志记录方式，内置 file socket 支持扩展
-        'type'  => 'File',
-        // 日志保存目录
-        'path'  => LOG_PATH,
-        // 日志记录级别
-        'level' => [],
+        'type'                => 'socket',
+        'host'                => 'localhost',
+        //日志强制记录到配置的client_id
+        'force_client_ids'    => ['lichao'],
+        //限制允许读取日志的client_id
+        'allow_client_ids'    => ['lichao'],
     ],
 
     // +----------------------------------------------------------------------
@@ -236,4 +237,6 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
+    'default_code' => '051323140791',   //默认邀请号
 ];

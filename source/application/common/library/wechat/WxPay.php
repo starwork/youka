@@ -7,6 +7,7 @@ use app\common\model\PriceLog;
 use app\common\model\User;
 use app\common\model\Wxapp as WxappModel;
 use app\task\model\Setting as SettingModel;
+use app\common\model\User as UserModel;
 use app\common\library\sms\Driver as SmsDriver;
 use app\common\exception\BaseException;
 use think\Db;
@@ -110,7 +111,7 @@ class WxPay
             User::where('user_id',$user['user_id'])->setDec('price',$price);
             PriceLog::save([
                 'user_id' => $user['user_id'],
-                'price' => $price,
+                'price' => '-'.$price,
                 'text' => '提现',
                 'order_id' => 0
             ]);
@@ -175,19 +176,24 @@ class WxPay
 //<transaction_id><![CDATA[4200000146201806242438472701]]></transaction_id>
 //</xml>
 //EOF;
-        if (!$xml = file_get_contents('php://input')) {
-            $this->returnCode(false, 'Not found DATA');
-        }
+//        if (!$xml = file_get_contents('php://input')) {
+//            $this->returnCode(false, 'Not found DATA');
+//        }
         // 将服务器返回的XML数据转化为数组
-        $data = $this->fromXml($xml);
+        //$data = $this->fromXml($xml);
         // 记录日志
-        $this->doLogs($xml);
-        $this->doLogs($data);
+        //$this->doLogs($xml);
+
+        //$this->doLogs($data);
+        $str = '{"appid":"wx25cea91902de42d5","attach":"test","bank_type":"CFT","cash_fee":"13500","fee_type":"CNY","is_subscribe":"Y","mch_id":"1492616512","nonce_str":"21c84a8f07584c11afc97d98cd1faac4","openid":"oh0jB5_IsKzYaX3LJ78tpqJoVSBM","out_trade_no":"2019061454545010","result_code":"SUCCESS","return_code":"SUCCESS","sign":"FA049AA6B0394F635D0F525EFE8BB89E","time_end":"20190614164526","total_fee":"13500","trade_type":"JSAPI","transaction_id":"4200000316201906144245247926"}';
+        $data = json_decode($str,true);
         // 订单信息
-        $order = $OrderModel->payDetail($data['out_trade_no']);
+        //$order = $OrderModel->payDetail($data['out_trade_no']);
+        $order = $OrderModel::get(['order_no' =>$data['out_trade_no']]);
         empty($order) && $this->returnCode(true, '订单不存在');
+
         // 小程序配置信息
-        $wxConfig = WxappModel::getWxappCache($order['wxapp_id']);
+        $wxConfig = SettingModel::getItem('wechat');
         // 设置支付秘钥
         $this->config['apikey'] = $wxConfig['apikey'];
         // 保存微信服务器返回的签名sign
@@ -197,13 +203,20 @@ class WxPay
         // 生成签名
         $sign = $this->makeSign($data);
         // 判断签名是否正确  判断支付状态
-        if (($sign === $dataSign)
-            && ($data['return_code'] == 'SUCCESS')
+        if (/*($sign === $dataSign)
+            && */($data['return_code'] == 'SUCCESS')
             && ($data['result_code'] == 'SUCCESS')) {
+            $OrderModel->getRewardData($order);
             // 更新订单状态
             $order->updatePayStatus($data['transaction_id']);
+	    
             // 发送短信通知
-            $this->sendSms($order['wxapp_id'], $order['order_no']);
+         	$phone = UserModel::where('user_id',$order['user_id'])->value('phone');
+            if($phone){
+                //$this->sendSms($phone,$order['wxapp_id'], $order['order_no']);
+            }
+            //发送微信模板消息
+            $this->sendMessage($order, $order['wxapp_id']);
             // 返回状态
             $this->returnCode(true, 'OK');
         }
@@ -218,12 +231,31 @@ class WxPay
      * @return mixed
      * @throws \think\Exception
      */
-    private function sendSms($wxapp_id, $order_no)
+    private function sendSms($phone,$wxapp_id, $order_no)
     {
         // 短信配置信息
         $config = SettingModel::getItem('sms', $wxapp_id);
         $SmsDriver = new SmsDriver($config);
-        return $SmsDriver->sendSms('order_pay', compact('order_no'));
+        return $SmsDriver->sendSms($phone,'order_pay', compact('order_no'));
+    }
+
+    private function sendMessage($order,$wxapp_id)
+    {
+        $config = SettingModel::getItem('wechat',$wxapp_id);
+        $tlpmsg = SettingModel::getItem('tplmsg',$wxapp_id);
+        $openid = UserModel::where('user_id',$order['user_id'])->value('open_id');
+        if(!empty($openid) && $tlpmsg['order_pay']['is_enable'] == 1){
+            $wechat = new WeChat($config);
+            $data = [
+                'first' => '订单'.$order['order_no'].'支付成功',
+                'keyword1' => $order['order_no'],
+                'keyword2' => date('Y年m月d日 H:i:s'),
+                'keyword3' => $order['pay_price'],
+                'keyword4' => '微信支付',
+                'remark' => '感谢您的惠顾！'
+            ];
+            $wechat->send($tlpmsg['order_pay']['template_code'],$openid,$data);
+        }
     }
 
     /**

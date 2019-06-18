@@ -4,6 +4,7 @@ namespace app\store\model;
 
 use app\common\model\Goods as GoodsModel;
 use think\Db;
+use think\Url;
 
 /**
  * 商品模型
@@ -23,14 +24,20 @@ class Goods extends GoodsModel
             $this->error = '请上传商品图片';
             return false;
         }
+        if (!isset($data['file_id']) || empty($data['file_id'])) {
+            $this->error = '请上传推广图片';
+            return false;
+        }
         $data['content'] = isset($data['content']) ? $data['content'] : '';
         $data['wxapp_id'] = $data['spec']['wxapp_id'] = self::$wxapp_id;
-
         // 开启事务
         Db::startTrans();
         try {
             // 添加商品
             $this->allowField(true)->save($data);
+            //商品标签
+            $tags = !empty($data['tags']) ? $data['tags'] : [];
+            $this->addGoodsTags($tags);
             // 商品规格
             $this->addGoodsSpec($data);
             // 商品图片
@@ -63,6 +70,25 @@ class Goods extends GoodsModel
     }
 
     /**
+     * 添加商品标签
+     * @param $tags
+     * @return int
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
+    private function addGoodsTags($tags)
+    {
+        $this->tags()->delete();
+        $tags = array_filter(array_unique($tags));
+        $data = array_map(function ($tags_id) {
+            return [
+                'tags_id' => $tags_id
+            ];
+        }, $tags);
+        return $this->tags()->saveAll($data);
+    }
+
+    /**
      * 编辑商品
      * @param $data
      * @return bool
@@ -73,6 +99,10 @@ class Goods extends GoodsModel
             $this->error = '请上传商品图片';
             return false;
         }
+        if (!isset($data['file_id']) || empty($data['file_id'])) {
+            $this->error = '请上传推广图片';
+            return false;
+        }
         $data['content'] = isset($data['content']) ? $data['content'] : '';
         $data['wxapp_id'] = $data['spec']['wxapp_id'] = self::$wxapp_id;
         // 开启事务
@@ -80,6 +110,9 @@ class Goods extends GoodsModel
         try {
             // 保存商品
             $this->allowField(true)->save($data);
+            //商品标签
+            $tags = !empty($data['tags']) ? $data['tags'] : [];
+            $this->addGoodsTags($tags);
             // 商品规格
             $this->addGoodsSpec($data, true);
             // 商品图片
@@ -122,6 +155,8 @@ class Goods extends GoodsModel
      */
     public function remove()
     {
+        $this->save(['is_delete' => 1]);
+        return true;
         // 开启事务处理
         Db::startTrans();
         try {

@@ -29,20 +29,4 @@ class Child extends Controller
         parent::_initialize();
         $this->user = $this->getUser();   // 用户信息
     }
-
-    /**
-     * 下级订单列表
-     * @param $dataType
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function lists($dataType)
-    {
-        $model = new OrderModel;
-        $list = $model->getChildList($this->user['user_id'], $dataType);
-        return $this->renderSuccess(compact('list'));
-    }
-
 }

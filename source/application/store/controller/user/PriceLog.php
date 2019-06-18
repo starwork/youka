@@ -16,6 +16,8 @@ class PriceLog extends Controller
 {
     public function index($filer=[])
     {
+        $user_id = $this->request->param('user_id');
+        $user_id > 0 && $filer['user_id'] = $user_id;
         $model = new PriceLogModel();
         $list =  $model->getList($filer);
         return $this->fetch('index',compact('list'));
